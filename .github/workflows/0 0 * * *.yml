@@ -53,4 +53,4 @@ jobs:
       with:
         name: ${{ matrix.table_path }}
         retention-days: '10'
-        path: ${{env.PWD}}/temp/*
+        path: ${{env.GITHUB_WORKSPACE}}/temp/*
