@@ -1,0 +1,5 @@
+snowflake-connector-python==2.7.4
+requests~=2.27.1
+soda-core-snowflake==3.0.2
+soda-core-redshift==3.0.2
+PyYAML~=5.4.1
