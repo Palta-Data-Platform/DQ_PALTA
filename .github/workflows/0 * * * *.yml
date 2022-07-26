@@ -17,7 +17,6 @@ jobs:
         - paced_data.stg_telemetry.f_user_event
         - simple_data.dm_finance.f_transaction
         - simple_data.stg_finance.f_revenuecat_subscription
-        - simple_data.stg_finance.f_source_refund
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
