@@ -34,7 +34,7 @@ simple_data.stg_finance.f_revenuecat_event:
     unics_colums: 'ID'
     time_colum: 'EVENT_TIMESTAMP'
 simple_data.stg_finance.f_revenuecat_subscription:
-  schedule: '0 * * * *'
+  schedule: '0 */3 * * *'
   freshness_date > 0:
     time_colum: 'T_SF_LOAD_TS'
     interval: '72h'
