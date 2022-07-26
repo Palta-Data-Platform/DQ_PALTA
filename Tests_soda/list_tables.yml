@@ -44,7 +44,7 @@ simple_data.stg_finance.f_revenuecat_subscription:
     unics_colums: 'STORE_TRANSACTION_ID,START_TIME'
     time_colum: 'T_SF_LOAD_TS'
 simple_data.stg_finance.f_source_refund:
-  schedule: '0 * * * *'
+  schedule: '0 */4 * * *'
   freshness_date > 0:
     time_colum: 'T_SF_LOAD_TS'
     interval: '72h'
