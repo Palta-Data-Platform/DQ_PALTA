@@ -1,0 +1,54 @@
+name: Every_day
+on:
+  schedule:
+  - cron: 0 0 * * *
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: Log level
+        required: true
+        default: warning
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        table_path:
+        - paced_data.stg_telemetry.f_user_event
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: 'python -m pip install --upgrade pip
+
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+        '
+    - name: run main
+      env:
+        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        CHANNEL: ${{ secrets.TEST_CHANNEL }}
+        COMPANY: ${{ secrets.COMPANY }}
+        EMAILS: ${{ secrets.EMAILS }}
+        API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
+        DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
+        PATH_TO_TABLE: ${{ matrix.table_path }}
+        GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        SCHEDULE: 0 0 * * *
+        ALWAYS_SEND: false
+      run: 'python3 main.py
+
+        '
+    - name: Upload Artifact
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.table_path }}
+        retention-days: 10
+        path: /home/runner/work/soda_tests/soda_tests/temp/*
