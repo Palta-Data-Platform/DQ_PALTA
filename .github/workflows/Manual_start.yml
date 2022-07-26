@@ -1,4 +1,4 @@
-name: Manual_start_tests
+name: Manual_start
 
 on:
 #  schedule:
