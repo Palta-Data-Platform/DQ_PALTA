@@ -1,0 +1,47 @@
+name: Manual_start
+
+on:
+#  schedule:
+#    - cron: "0 * * * *"
+  workflow_dispatch:
+    inputs:
+      Path:
+        description: 'Path to Table'
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: run main
+        env:
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+          CHANNEL:  ${{ secrets.TEST_CHANNEL }}
+          COMPANY:  ${{ secrets.COMPANY }}
+          EMAILS: ${{ secrets.EMAILS }}
+          API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
+          DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
+          PATH_TO_TABLE: ${{ github.event.inputs.Path }}
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          ALWAYS_SEND: False
+        run: |
+          python3 main.py
+      - name: 'Upload Artifact'
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.inputs.Path }}
+          retention-days: 10
+          path: temp/*
