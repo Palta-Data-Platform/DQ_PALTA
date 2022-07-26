@@ -375,7 +375,7 @@ if __name__ == "__main__":
     DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
     GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
     SCHEDULE = os.environ["SCHEDULE"]
-    # print(os.environ)
+    print(os.environ)
     get_previous_result()
 
     if os.path.exists("temp/" + path_to_table + '.json'):
