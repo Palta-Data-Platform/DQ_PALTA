@@ -133,8 +133,9 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
             result_ok = result_ok + "--" + ch['name'].split('.')[0] + "\n>"
             count_result[name_test] = 1
     for ch in prev_for_log["FOR_LOG"]:
-        name_test = ch['name'].split('.')[0]
+
         if ch["NAME_TEST"] in should_not_start:
+            name_test = ch["NAME_TEST"]
             for_log.append(
                 {"NAME_TEST": ch["NAME_TEST"],
                  "PATH_TO_TABLE": ch["PATH_TO_TABLE"],
