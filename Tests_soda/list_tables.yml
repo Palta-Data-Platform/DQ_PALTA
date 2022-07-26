@@ -1,0 +1,57 @@
+paced_data.stg_telemetry.f_user_event:
+  schedule: '0 0 * * *'
+  freshness_date > 0:
+   time_colum: 'SERVER_UPLOAD_TIME'
+   interval: '24h'
+  dublicate = 0:
+    interval: '24h'
+    unics_colums: 'UUID'
+    time_colum: 'SERVER_UPLOAD_TIME'
+    schedule: '0 * * * *'
+  Errors_in_loading_history = 0:
+    interval: '24h'
+simple_data.dm_dashboard.f_user_activity:
+  schedule: '0 0 * * *'
+  freshness_date > 0:
+    time_colum: 'REPORT_DT'
+    interval: '72h'
+  instals_diff_active > 0:
+    time_colum: 'REPORT_DT'
+    interval: '74h'
+    comlum1: ACTIVE_USERS
+    comlum2: INSTALLS
+simple_data.dm_finance.f_transaction:
+  schedule: '0 * * * *'
+  freshness_date > 0:
+    time_colum: 'TRANSACTION_TS'
+    interval: '24h'
+simple_data.stg_finance.f_revenuecat_event:
+  freshness_date > 0:
+    time_colum: 'EVENT_TIMESTAMP'
+    interval: '180m'
+  dublicate = 0:
+    interval: '180m'
+    unics_colums: 'ID'
+    time_colum: 'EVENT_TIMESTAMP'
+simple_data.stg_finance.f_revenuecat_subscription:
+  schedule: '0 * * * *'
+  freshness_date > 0:
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '72h'
+  dublicate = 0:
+    schedule: '0 0 * * *'
+    interval: '72h'
+    unics_colums: 'STORE_TRANSACTION_ID,START_TIME'
+    time_colum: 'T_SF_LOAD_TS'
+simple_data.stg_finance.f_source_refund:
+  schedule: '0 * * * *'
+  freshness_date > 0:
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '72h'
+
+
+
+
+
+
+
