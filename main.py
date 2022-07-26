@@ -268,7 +268,11 @@ def get_previous_result():
         }
         response = requests.get(f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/artifacts",
                                 headers=headers, params=params)
-        artifacts = response.json()['artifacts']
+        if 'artifacts'  in response.json():
+            artifacts = response.json()['artifacts']
+        else:
+            id_artefact=0
+            count_artifacts = 0
         count_artifacts = len(artifacts)
         for artifact in artifacts:
             if artifact['name'] == path_to_table:
