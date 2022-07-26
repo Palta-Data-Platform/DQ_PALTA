@@ -132,26 +132,27 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         else:
             result_ok = result_ok + "--" + ch['name'].split('.')[0] + "\n>"
             count_result[name_test] = 1
-    for ch in prev_for_log["FOR_LOG"]:
+    if "FOR_LOG" in prev_for_log:
+        for ch in prev_for_log["FOR_LOG"]:
 
-        if ch["NAME_TEST"] in should_not_start:
-            name_test = ch["NAME_TEST"]
-            for_log.append(
-                {"NAME_TEST": ch["NAME_TEST"],
-                 "PATH_TO_TABLE": ch["PATH_TO_TABLE"],
-                 "STATUS": ch["STATUS"],
-                 "RESULT": ch["RESULT"],
-                 "START_TIME": ch["START_TIME"],
-                 "ERROR_TEXT": ch["ERROR_TEXT"],
-                 "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
-                 "LOGIC_QUERY": ch['LOGIC_QUERY'],
-                 "COMPANY": COMPANY,
-                 "DURATION_TESTS": ch['DURATION_TESTS'],
+            if ch["NAME_TEST"] in should_not_start:
+                name_test = ch["NAME_TEST"]
+                for_log.append(
+                    {"NAME_TEST": ch["NAME_TEST"],
+                     "PATH_TO_TABLE": ch["PATH_TO_TABLE"],
+                     "STATUS": ch["STATUS"],
+                     "RESULT": ch["RESULT"],
+                     "START_TIME": ch["START_TIME"],
+                     "ERROR_TEXT": ch["ERROR_TEXT"],
+                     "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
+                     "LOGIC_QUERY": ch['LOGIC_QUERY'],
+                     "COMPANY": COMPANY,
+                     "DURATION_TESTS": ch['DURATION_TESTS'],
 
-                 }
-            )
-            if ch["NAME_TEST"] in prev_for_log['RESULT_ERROR']:
-                count_result[name_test] = prev_for_log['RESULT_ERROR'][ch["NAME_TEST"]]
+                     }
+                )
+                if ch["NAME_TEST"] in prev_for_log['RESULT_ERROR']:
+                    count_result[name_test] = prev_for_log['RESULT_ERROR'][ch["NAME_TEST"]]
 
     table = "*Table:" + path_to_table + "*"
     if test_passed == 0:
