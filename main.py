@@ -12,6 +12,7 @@ import ruamel.yaml
 
 from ruamel.yaml.scalarstring import PreservedScalarString
 import textwrap
+ALWAYS_SEND='False'
 
 def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
@@ -357,11 +358,13 @@ def generation_yml_for_test():
             flag_all_test = True
         else:
             flag_all_test = False
+    global hooks
     if "CHANNEL_SLACK" in get_params:
         hooks = os.environ[get_params["CHANNEL_SLACK"]]
     else:
         hooks = os.environ["CHANNEL"]
     if "ALWAYS_SEND" in get_params:
+        global ALWAYS_SEND
         ALWAYS_SEND=get_params['ALWAYS_SEND']
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
@@ -416,7 +419,6 @@ if __name__ == "__main__":
     DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
     GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
     SCHEDULE = os.environ["SCHEDULE"]
-    ALWAYS_SEND='False'
     print(os.environ)
     get_previous_result()
     if SCHEDULE=='Manual':
