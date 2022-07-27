@@ -317,6 +317,8 @@ def generation_yml_for_manual_test():
         print(json.dumps(get_params))
     if os.environ["CHANNEL_CUSTOM"] !='':
         hooks = os.environ["CHANNEL_CUSTOM"]
+    global ALWAYS_SEND
+    ALWAYS_SEND = get_params['ALWAYS_SEND']
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
     with open('Tests_soda/pattern_tests.yml') as f:
