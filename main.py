@@ -18,18 +18,12 @@ def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
 
-# TODO добавить расписание для каждого теста
-# TODO workflows генерить автоматический
-    # TODO Создание файла workflow
-    # TODO Внедрение workflow
-# TODO Создать для тестов отдельный репозиторий для yml конфигов
 # TODO использова tempfile
 # TODO Использовать шаблон для slack сообщений
-
-# TODO переделать на worflows по расписаниям а не по таблицам
 # TODO подумать как организовать ручной запуск
 # TODO вынести в конфиг канал, почту
 # TODO добавить отправление по emails
+# TODO продумать если несколько репозиториев с разными тестами, как выдавать общий статус по таблице
 # TODO добавить логирование
 # TODO Добавить тесты на аномалии
 
@@ -300,7 +294,10 @@ def main():
 
     now = datetime.now()
     now_int = int(datetime.utcnow().timestamp())
-    generation_yml_for_test()
+    if SCHEDULE == 'Manual':
+        generation_yml_for_manual_test()
+    else:
+        generation_yml_for_test()
     test_passed, result_test = start_tests()
     text_e, for_log, count_result, link_to_atlan = create_log_and_messages(result_test, now_int,
                                                                            now,
@@ -311,6 +308,43 @@ def main():
 def represent_literal(dumper, data):
     return dumper.represent_scalar(SafeLoader.DEFAULT_SCALAR_TAG,
                                    data, style="|")
+
+#path_to_table
+def generation_yml_for_test():
+    with open('Tests_soda/list_tables.yml') as f:
+        get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
+
+        print(json.dumps(get_params))
+
+
+    yml_for_soda = {}
+    yml_for_soda['checks for ' + path_to_table] = []
+    with open('Tests_soda/pattern_tests.yml') as f:
+        get_shablons_tests = yaml.load(f, Loader=SafeLoader)
+        for test in get_params:
+            if test in get_shablons_tests:
+                print(get_params[test])
+                get_params[test]['path_to_table'] = path_to_table
+                for i in get_shablons_tests[test]:
+                    print(get_shablons_tests[test][i].format(**get_params[test]))
+                    if "name" == i:
+                        get_shablons_tests[test][i] = ruamel.yaml.scalarstring.DoubleQuotedScalarString(
+                            get_shablons_tests[test][i].format(**get_params[test]))
+                    else:
+                        get_shablons_tests[test][i] = get_shablons_tests[test][i].format(**get_params[test])
+                        get_shablons_tests[test][i] = wrapped(get_shablons_tests[test][i])
+                if test in list_tests or "all_tests" in list_tests:
+                    yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
+                else:
+                    should_not_start[get_shablons_tests[test]["name"].split('.')[0]] = test
+
+        print(json.dumps(get_shablons_tests))
+    print(json.dumps(yml_for_soda))
+    print(json.dumps(should_not_start))
+
+    yaml_wr = ruamel.yaml.YAML()
+    with open("temp/" + path_to_table + ".yml", 'w') as outfile:
+        yaml_wr.dump(yml_for_soda, outfile)
 
 
 def generation_yml_for_test():
@@ -377,7 +411,12 @@ if __name__ == "__main__":
     SCHEDULE = os.environ["SCHEDULE"]
     print(os.environ)
     get_previous_result()
-
+    if SCHEDULE=='Manual':
+        if len(path_to_table.split(':'))>1:
+            list_tests=path_to_table.split(':')[1].split(',')
+            path_to_table=path_to_table.split(':')[0]
+        else:
+            list_tests=['all_tests']
     if os.path.exists("temp/" + path_to_table + '.json'):
         with open("temp/" + path_to_table + '.json') as f:
             d = json.load(f)
