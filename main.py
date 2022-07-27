@@ -360,37 +360,37 @@ def generation_yml_for_test():
 
 
 if __name__ == "__main__":
-    should_not_start = {}
-    SNOWFLAKE_USER = os.environ['SNOWFLAKE_USER']
-    SNOWFLAKE_PASSWORD = os.environ['SNOWFLAKE_PASSWORD']
-    SNOWFLAKE_ACCOUNT = os.environ['SNOWFLAKE_ACCOUNT']
-    SNOWFLAKE_WAREHOUSE = os.environ['SNOWFLAKE_WAREHOUSE']
-    path_to_table = os.environ['PATH_TO_TABLE']
-    hooks = os.environ['CHANNEL']
-    COMPANY = os.environ['COMPANY']
-    GITHUB_REF_NAME = os.environ['GITHUB_REF_NAME']
-    GIT_TOKEN = os.environ['GIT_TOKEN']
-    GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
-    API_KEY_ATLAN = os.environ["API_KEY_ATLAN"]
-    DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
-    GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
-    SCHEDULE = os.environ["SCHEDULE"]
+    # should_not_start = {}
+    # SNOWFLAKE_USER = os.environ['SNOWFLAKE_USER']
+    # SNOWFLAKE_PASSWORD = os.environ['SNOWFLAKE_PASSWORD']
+    # SNOWFLAKE_ACCOUNT = os.environ['SNOWFLAKE_ACCOUNT']
+    # SNOWFLAKE_WAREHOUSE = os.environ['SNOWFLAKE_WAREHOUSE']
+    # path_to_table = os.environ['PATH_TO_TABLE']
+    # hooks = os.environ['CHANNEL']
+    # COMPANY = os.environ['COMPANY']
+    # GITHUB_REF_NAME = os.environ['GITHUB_REF_NAME']
+    # GIT_TOKEN = os.environ['GIT_TOKEN']
+    # GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
+    # API_KEY_ATLAN = os.environ["API_KEY_ATLAN"]
+    # DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
+    # GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
+    # SCHEDULE = os.environ["SCHEDULE"]
     print(os.environ)
-    get_previous_result()
-
-    if os.path.exists("temp/" + path_to_table + '.json'):
-        with open("temp/" + path_to_table + '.json') as f:
-            d = json.load(f)
-        prev_for_log = d
-        prev_len_res = len(d["FOR_LOG"])
-        perv_how_long_status = d["HOW_LONG_STATUS"]
-        prev_path_test = d["STATUS"]
-        prev_count_result = d["RESULT_ERROR"]
-    else:
-        prev_for_log = []
-        prev_len_res = 0
-        perv_how_long_status = 0
-        prev_path_test = 0
-        prev_count_result = []
-
-    main()
+    # get_previous_result()
+    #
+    # if os.path.exists("temp/" + path_to_table + '.json'):
+    #     with open("temp/" + path_to_table + '.json') as f:
+    #         d = json.load(f)
+    #     prev_for_log = d
+    #     prev_len_res = len(d["FOR_LOG"])
+    #     perv_how_long_status = d["HOW_LONG_STATUS"]
+    #     prev_path_test = d["STATUS"]
+    #     prev_count_result = d["RESULT_ERROR"]
+    # else:
+    #     prev_for_log = []
+    #     prev_len_res = 0
+    #     perv_how_long_status = 0
+    #     prev_path_test = 0
+    #     prev_count_result = []
+    #
+    # main()
