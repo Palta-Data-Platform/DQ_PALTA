@@ -310,7 +310,7 @@ def represent_literal(dumper, data):
                                    data, style="|")
 
 #path_to_table
-def generation_yml_for_test():
+def generation_yml_for_manual_test():
     with open('Tests_soda/list_tables.yml') as f:
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
