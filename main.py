@@ -315,7 +315,8 @@ def generation_yml_for_manual_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
-    if os.environ["CHANNEL_CUSTOM"] !='':
+    if os.environ["CHANNEL_CUSTOM"] !='1':
+        global hooks
         hooks = os.environ["CHANNEL_CUSTOM"]
     global ALWAYS_SEND
     ALWAYS_SEND = get_params['ALWAYS_SEND']
