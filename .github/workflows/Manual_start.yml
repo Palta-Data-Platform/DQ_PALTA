@@ -11,6 +11,13 @@ on:
       Path_file:
         description: 'Path to file'
         required: true
+      ALWAYS_SEND:
+        description: 'ALWAYS_SEND'
+        required: true
+      CHANNEL:
+        description: 'CHANNEL'
+        required: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +38,8 @@ jobs:
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          CHANNEL:  ${{ secrets.TEST_CHANNEL }}
+          CHANNEL: ${{ secrets.CHANNEL }}
+          CHANNEL_CUSTOM:  ${{ github.event.inputs.CHANNEL }}
           COMPANY:  ${{ secrets.COMPANY }}
           EMAILS: ${{ secrets.EMAILS }}
           API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
@@ -39,7 +47,7 @@ jobs:
           PATH_TO_TABLE: ${{ github.event.inputs.Path }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
           SCHEDULE: Manual
-          ALWAYS_SEND: False
+          ALWAYS_SEND: ${{ github.event.inputs.ALWAYS_SEND }}
         run: |
           python3 main.py
       - name: 'Upload Artifact'

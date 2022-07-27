@@ -13,19 +13,18 @@ import ruamel.yaml
 from ruamel.yaml.scalarstring import PreservedScalarString
 import textwrap
 
-
 def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
-
+# TODO ручной запуск работает, только проблема откуда брать статус работы теста и результат
+# TODO вынести в конфиг канал, почту
 # TODO использова tempfile
 # TODO Использовать шаблон для slack сообщений
-# TODO подумать как организовать ручной запуск
-# TODO вынести в конфиг канал, почту
 # TODO добавить отправление по emails
 # TODO продумать если несколько репозиториев с разными тестами, как выдавать общий статус по таблице
 # TODO добавить логирование
 # TODO Добавить тесты на аномалии
+
 
 def send_messeg_to_slake(text_er, hooks_s):
     # print({"text": str(text_er)})
@@ -211,9 +210,9 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
     global perv_how_long_status
     for_status = {}
     perv_how_long_status_local = perv_how_long_status
-    if "ALWAYS_SEND" not in os.environ:
-        if os.environ["ALWAYS_SEND"] == 'True':
-            send_messeg_to_slake(text_e, hooks)
+
+    if ALWAYS_SEND == 'True':
+        send_messeg_to_slake(text_e, hooks)
     else:
         if prev_path_test != test_passed:
 
@@ -302,7 +301,7 @@ def main():
     text_e, for_log, count_result, link_to_atlan = create_log_and_messages(result_test, now_int,
                                                                            now,
                                                                            test_passed)
-    assert 0 == wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan)
+    wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan)
 
 
 def represent_literal(dumper, data):
@@ -315,8 +314,8 @@ def generation_yml_for_manual_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
-
-
+    if os.environ["CHANNEL_CUSTOM"] !='':
+        hooks = os.environ["CHANNEL_CUSTOM"]
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
     with open('Tests_soda/pattern_tests.yml') as f:
@@ -358,7 +357,12 @@ def generation_yml_for_test():
             flag_all_test = True
         else:
             flag_all_test = False
-
+    if "CHANNEL_SLACK" in get_params:
+        hooks = os.environ[get_params["CHANNEL_SLACK"]]
+    else:
+        hooks = os.environ["CHANNEL"]
+    if "ALWAYS_SEND" in get_params:
+        ALWAYS_SEND=get_params['ALWAYS_SEND']
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
     with open('Tests_soda/pattern_tests.yml') as f:
@@ -383,6 +387,9 @@ def generation_yml_for_test():
                     yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
                 else:
                     should_not_start[get_shablons_tests[test]["name"].split('.')[0]] = test
+                if "ALWAYS_SEND" in get_params[test]:
+                    ALWAYS_SEND = get_params[test]['ALWAYS_SEND']
+
 
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))
@@ -400,7 +407,7 @@ if __name__ == "__main__":
     SNOWFLAKE_ACCOUNT = os.environ['SNOWFLAKE_ACCOUNT']
     SNOWFLAKE_WAREHOUSE = os.environ['SNOWFLAKE_WAREHOUSE']
     path_to_table = os.environ['PATH_TO_TABLE']
-    hooks = os.environ['CHANNEL']
+    hooks = os.environ["CHANNEL"]
     COMPANY = os.environ['COMPANY']
     GITHUB_REF_NAME = os.environ['GITHUB_REF_NAME']
     GIT_TOKEN = os.environ['GIT_TOKEN']
@@ -409,6 +416,7 @@ if __name__ == "__main__":
     DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
     GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
     SCHEDULE = os.environ["SCHEDULE"]
+    ALWAYS_SEND='False'
     print(os.environ)
     get_previous_result()
     if SCHEDULE=='Manual':
