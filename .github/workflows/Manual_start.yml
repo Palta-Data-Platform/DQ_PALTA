@@ -35,6 +35,7 @@ jobs:
           DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
           PATH_TO_TABLE: ${{ github.event.inputs.Path }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          SCHEDULE: Manual
           ALWAYS_SEND: False
         run: |
           python3 main.py
