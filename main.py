@@ -12,10 +12,13 @@ import ruamel.yaml
 
 from ruamel.yaml.scalarstring import PreservedScalarString
 import textwrap
-ALWAYS_SEND='False'
+
+ALWAYS_SEND = 'False'
+
 
 def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
+
 
 # TODO ручной запуск работает, только проблема откуда брать статус работы теста и результат
 # TODO вынести в конфиг канал, почту
@@ -264,10 +267,10 @@ def get_previous_result():
         }
         response = requests.get(f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/artifacts",
                                 headers=headers, params=params)
-        if 'artifacts'  in response.json():
+        if 'artifacts' in response.json():
             artifacts = response.json()['artifacts']
         else:
-            id_artefact=0
+            id_artefact = 0
             count_artifacts = 0
         count_artifacts = len(artifacts)
         for artifact in artifacts:
@@ -309,17 +312,18 @@ def represent_literal(dumper, data):
     return dumper.represent_scalar(SafeLoader.DEFAULT_SCALAR_TAG,
                                    data, style="|")
 
-#path_to_table
+
+# path_to_table
 def generation_yml_for_manual_test():
     with open('Tests_soda/list_tables.yml') as f:
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
-    if os.environ["CHANNEL_CUSTOM"] !='1':
+    if os.environ["CHANNEL_CUSTOM"] != '1':
         global hooks
         hooks = os.environ["CHANNEL_CUSTOM"]
     global ALWAYS_SEND
-    ALWAYS_SEND = get_params['ALWAYS_SEND']
+    ALWAYS_SEND = os.environ['ALWAYS_SEND']
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
     with open('Tests_soda/pattern_tests.yml') as f:
@@ -368,7 +372,7 @@ def generation_yml_for_test():
         hooks = os.environ["CHANNEL"]
     if "ALWAYS_SEND" in get_params:
         global ALWAYS_SEND
-        ALWAYS_SEND=get_params['ALWAYS_SEND']
+        ALWAYS_SEND = get_params['ALWAYS_SEND']
     yml_for_soda = {}
     yml_for_soda['checks for ' + path_to_table] = []
     with open('Tests_soda/pattern_tests.yml') as f:
@@ -395,7 +399,6 @@ def generation_yml_for_test():
                     should_not_start[get_shablons_tests[test]["name"].split('.')[0]] = test
                 if "ALWAYS_SEND" in get_params[test]:
                     ALWAYS_SEND = get_params[test]['ALWAYS_SEND']
-
 
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))
@@ -424,12 +427,12 @@ if __name__ == "__main__":
     SCHEDULE = os.environ["SCHEDULE"]
     print(os.environ)
     get_previous_result()
-    if SCHEDULE=='Manual':
-        if len(path_to_table.split(':'))>1:
-            list_tests=path_to_table.split(':')[1].split(',')
-            path_to_table=path_to_table.split(':')[0]
+    if SCHEDULE == 'Manual':
+        if len(path_to_table.split(':')) > 1:
+            list_tests = path_to_table.split(':')[1].split(',')
+            path_to_table = path_to_table.split(':')[0]
         else:
-            list_tests=['all_tests']
+            list_tests = ['all_tests']
     if os.path.exists("temp/" + path_to_table + '.json'):
         with open("temp/" + path_to_table + '.json') as f:
             d = json.load(f)
