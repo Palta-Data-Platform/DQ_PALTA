@@ -1,7 +1,7 @@
 paced_data.stg_telemetry.f_user_event:
   schedule: '0 0 * * *'
   CHANNEL_SLACK: 'TEST_CHANNEL'
-  ALWAYS_SEND: 'True'
+  ALWAYS_SEND: 'False'
   freshness_date > 0:
    time_colum: 'SERVER_UPLOAD_TIME'
    interval: '24h'
