@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - paced_data.stg_telemetry.f_user_event, test
-        - simple_data.dm_finance.f_transaction,  test
+        - paced_data.stg_telemetry.f_user_event:test,table,karrel
+        - simple_data.dm_finance.f_transaction:test,table,karrel
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
