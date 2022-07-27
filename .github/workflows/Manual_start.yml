@@ -8,6 +8,9 @@ on:
       Path:
         description: 'Path to Table'
         required: true
+      Path_file:
+        description: 'Path to file'
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -43,6 +46,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.inputs.Path }}
+          name: ${{ github.event.inputs.Path_file }}
           retention-days: 10
           path: temp/*
