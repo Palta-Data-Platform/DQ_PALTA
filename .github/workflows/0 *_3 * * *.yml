@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.stg_finance.f_revenuecat_subscription
+        - simple_data.stg_finance.f_revenuecat_event
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -42,7 +42,6 @@ jobs:
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         SCHEDULE: 0 */3 * * *
         ALWAYS_SEND: 'False'
-        TEST_CHANNEL: ${{ secrets.TEST_CHANNEL }}
       run: 'python3 main.py
 
         '

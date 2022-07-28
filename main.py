@@ -35,7 +35,7 @@ def send_messeg_to_slake(text_er, hooks_s):
     response = requests.post(
         hooks_s, json={"text": str(text_er)}, headers={"Content-Type": "application/json"}
     )
-    print(response.content)
+    # print(response.status_code)
     return response.status_code
 
 
