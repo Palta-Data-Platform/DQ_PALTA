@@ -1,59 +1,81 @@
-paced_data.stg_telemetry.f_user_event:
-  schedule: '0 0 * * *'
-  CHANNEL_SLACK: 'TEST_CHANNEL'
+simple_data.dm_finance.f_subscription:
+  schedule: '0 5 * * *'
+  custom_selects:
+    All_amounts = 0:
+      name: "All amounts in original currency have been converted to USD. transactions were not converted to USD last 7 days"
+      All_amounts query: "
+        SELECT
+  IFF(COUNT(*) = 0, 0, 1) 
+FROM simple.finance.f_subscription
+WHERE 
+  DATE(TRANSACTION_TS) > DATEADD(DAY, -7, CURRENT_DATE()) AND
+  AMOUNT_USD = 0 AND
+  ROUND(AMOUNT_PAID, 0) != 0"
+    No_duplicated = 0:
+      name: "No duplicated transactions last 10 days.There were {res_test} duplicated transactions in the table"
+      No_duplicated query: "SELECT
+  IFF(
+    COUNT(TRANSACTION_ID) = COUNT(DISTINCT TRANSACTION_ID),
+    0,
+    1
+  )
+FROM simple.finance.f_subscription
+WHERE DATE(TRANSACTION_TS) > DATEADD(DAY, -10, CURRENT_DATE())"
+    Data_for_all_providers_came = 0:
+      name: "Data for all providers came yesterday. Not all providers has come (only {res_test} providers, expected more)"
+      Data_for_all_providers_came query: "SELECT
+  IFF(
+    YESTERDAY.COUNT_PROVIDERS < TOTAL.COUNT_PROVIDERS,
+    1,
+    0
+  ) AS IS_PASSED
+FROM (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM simple.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -1, CURRENT_DATE())
+) AS YESTERDAY
+CROSS JOIN (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM simple.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -7, CURRENT_DATE())
+) AS TOTAL"
+simple_data.dm_dashboard.f_user_activity:
+  schedule: "0 5 * * *"
   ALWAYS_SEND: 'False'
   freshness_date > 0:
-   time_colum: 'SERVER_UPLOAD_TIME'
-   interval: '24h'
-  dublicate = 0:
-    interval: '24h'
-    unics_colums: 'UUID'
-    time_colum: 'SERVER_UPLOAD_TIME'
-    schedule: '0 * * * *'
-  Errors_in_loading_history = 0:
-    interval: '24h'
-simple_data.dm_dashboard.f_user_activity:
-  schedule: '0 0 * * *'
-  freshness_date > 0:
     time_colum: 'REPORT_DT'
-    interval: '72h'
-  instals_diff_active > 0:
-    time_colum: 'REPORT_DT'
-    interval: '74h'
-    comlum1: ACTIVE_USERS
-    comlum2: INSTALLS
+    interval: '48h'
+  custom_selects:
+    the_number_of_installation = 0:
+      name: "The number of installation is greater than the number of total actions. Need to check the data.diff={res_test:.2f}%.."
+      the_number_of_installation query: "select case when sum(ACTIVE_USERS)<sum(INSTALLS) then 1 else 0 end as res   from simple_data.dm_dashboard.f_user_activity where REPORT_DT >= current_timestamp - INTERVAL '72h'"
 simple_data.dm_finance.f_transaction:
-  schedule: '0 * * * *'
+  schedule: "0 5 * * *"
   freshness_date > 0:
     time_colum: 'TRANSACTION_TS'
     interval: '24h'
 simple_data.stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
   freshness_date > 0:
     time_colum: 'EVENT_TIMESTAMP'
-    interval: '180m'
+    interval: '60m'
   dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_colum: 'EVENT_TIMESTAMP'
     interval: '180m'
     unics_colums: 'ID'
+  Checking_for_missing_days_for_days = 0:
+    schedule: "0 5 * * *"
     time_colum: 'EVENT_TIMESTAMP'
+    num_days: '3'
+
 simple_data.stg_finance.f_revenuecat_subscription:
-  schedule: '0 */3 * * *'
+  schedule: "0 */8 * * *"
   freshness_date > 0:
     time_colum: 'T_SF_LOAD_TS'
-    interval: '72h'
+    interval: '26h'
   dublicate = 0:
-    schedule: '0 0 * * *'
-    interval: '72h'
-    unics_colums: 'STORE_TRANSACTION_ID,START_TIME'
+    schedule: "0 5 */3 * *"
     time_colum: 'T_SF_LOAD_TS'
-simple_data.stg_finance.f_source_refund:
-  schedule: '0 */4 * * *'
-  freshness_date > 0:
-    time_colum: 'T_SF_LOAD_TS'
-    interval: '72h'
-
-
-
-
-
-
-
+    interval: '3d'
+    unics_colums: "STORE_TRANSACTION_ID,START_TIME"

@@ -14,7 +14,7 @@ instals_diff_active = 0:
     name:  "Instals_diff_active. The number of installation is greater than the number of total actions"
     instals_diff_active query: |
       select case when sum({comlum1})-sum({comlum2})>0 then 1 else 0 as check_test   from {path_to_table} where {time_colum} >= current_timestamp - INTERVAL '{interval}'
-custom_select > 0:
-    name:  "{name_test}. {error_description}"
-    custom_select query: |
-      {query_check}
+Checking_for_missing_days_for_days = 0:
+    name: " There are missed days.{num_days}"
+    Checking_for_missing_days_for_days query: |
+      select case when (count(1)<{num_days} or median(ct)/min(ct)>=2)then 1 else 0 end as res  from (select DATE_TRUNC('day', {time_colum}) as dt,count(1) as ct from {path_to_table} where DATE_TRUNC('day', {time_colum})<CURRENT_DATE() and DATE_TRUNC('day', {time_colum})>=CURRENT_DATE()-INTERVAL '{num_days}d' group by 1)
