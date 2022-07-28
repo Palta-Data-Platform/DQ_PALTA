@@ -17,12 +17,17 @@ on:
       CHANNEL:
         description: 'CHANNEL'
         required: true
+      id:
+        description: 'run identifier'
+        required: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: ${{github.event.inputs.id}}
+        run: echo run identifier ${{ inputs.id }}
       - uses: actions/checkout@v3
       - name: Set up Python 3.8
         uses: actions/setup-python@v4

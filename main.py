@@ -124,7 +124,8 @@ def log_insert_snowflake(for_log_iter):
                                                 for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
                                                 )
 
-    conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'], os.environ['SNOWFLAKE_ACCOUNT_META'],
+    conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'],
+                                          os.environ['SNOWFLAKE_ACCOUNT_META'],
                                           use_db='BI__META', use_schema_meta='DQ')
     try:
         sf_cursor = conction_for_meta.cursor()
@@ -134,8 +135,37 @@ def log_insert_snowflake(for_log_iter):
     except  Exception:
         print(sql_log)
         print(traceback.format_exc())
-        print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'],))
+        print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'], ))
     conction_for_meta.close()
+
+def send_email(user, pwd, recipient, subject, body):
+    import smtplib
+
+    FROM = user
+    TO = recipient if isinstance(recipient, list) else [recipient]
+    SUBJECT = subject
+    TEXT = body
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (
+        FROM,
+        ", ".join(TO),
+        SUBJECT,
+        TEXT,
+    )
+    message = message.encode('utf-8')
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        print("successfully sent the mail")
+    except:
+        print("failed to send mail")
+        print(traceback.format_exc())
 
 
 def create_log_and_messages(result_test, now_int, now, test_passed):
@@ -251,7 +281,7 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
     global perv_how_long_status
     for_status = {}
     perv_how_long_status_local = perv_how_long_status
-
+    send_email("serikbol.i@gmail.com", 'htbdpbzejhphtlnz', 'serikbol.i@gmail.com', path_to_table, text_e)
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
     else:
@@ -480,7 +510,6 @@ def generation_yml_for_test():
                     else:
                         should_not_start[get_params[test][custom_test]["name"].split('.')[0]] = custom_test
 
-
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))
     print(json.dumps(should_not_start))
@@ -529,4 +558,5 @@ if __name__ == "__main__":
         prev_path_test = 0
         prev_count_result = []
 
-    main()
+    #main()
+
