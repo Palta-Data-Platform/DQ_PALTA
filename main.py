@@ -118,7 +118,7 @@ def log_insert_snowflake(for_log_iter):
             '{6}','{7}','{8}','{9}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
                                                 for_log_iter['STATUS'], for_log_iter['RESULT']['value'],
                                                 for_log_iter['START_TIME'], for_log_iter['ERROR_TEXT'],
-                                                for_log_iter['INSERT_DATETIME'], for_log_iter['LOGIC_QUERY'],
+                                                for_log_iter['INSERT_DATETIME'], for_log_iter['LOGIC_QUERY'].replace("'","''"),
                                                 for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
                                                 )
 
