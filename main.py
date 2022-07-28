@@ -21,12 +21,10 @@ def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
 
-# TODO ручной запуск работает, только проблема откуда брать статус работы теста и результат
 # TODO использова tempfile
 # TODO Использовать шаблон для slack сообщений
 # TODO добавить отправление по emails
 # TODO продумать если несколько репозиториев с разными тестами, как выдавать общий статус по таблице
-# TODO добавить логирование
 # TODO Добавить тесты на аномалии
 
 
@@ -102,14 +100,14 @@ def start_tests():
     return test_passed, result_test
 
 
-def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta=''):
+def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta='',warehouse=''):
     if use_db != '':
         entry = snowflake.connector.connect(
             user=user_sf, password=password_sf, account="%s" % (account_sf),
-            database=use_db, schema=use_schema_meta)
+            database=use_db, schema=use_schema_meta, warehouse=warehouse)
     else:
         entry = snowflake.connector.connect(
-            user=user_sf, password=password_sf, account="%s" % (account_sf)
+            user=user_sf, password=password_sf, account="%s" % (account_sf),warehouse=warehouse
         )
     return entry
 
@@ -126,7 +124,8 @@ def log_insert_snowflake(for_log_iter):
 
     conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'],
                                           os.environ['SNOWFLAKE_ACCOUNT_META'],
-                                          use_db='BI__META', use_schema_meta='DQ')
+                                          use_db='BI__META', use_schema_meta='DQ',warehouse=os.environ['SNOWFLAKE_WAREHOUSE_META'])
+
     try:
         sf_cursor = conction_for_meta.cursor()
         sf_cursor.execute(sql_log, timeout=900)
@@ -196,6 +195,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         else:
             result_ok = result_ok + "--" + ch['name'].split('.')[0] + "\n>"
             count_result[name_test] = 1
+        log_insert_snowflake(for_log_iter)
     if "FOR_LOG" in prev_for_log:
         for ch in prev_for_log["FOR_LOG"]:
 
@@ -232,8 +232,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
             log_erros,
             ensure_ascii=False,
             indent=4)
-        for_log.append(
-            {"NAME_TEST": "",
+        for_log_iter={"NAME_TEST": "",
              "PATH_TO_TABLE": path_to_table,
              "STATUS": "tests not start",
              "RESULT": "",
@@ -245,7 +244,10 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
              "DURATION_TESTS": (datetime.now() - now).total_seconds(),
 
              }
+        for_log.append(
+            for_log_iter
         )
+        log_insert_snowflake(for_log_iter)
     link_to_git_workflow = "https://github.com/{0}/actions/runs/{1}".format(
         GITHUB_REPOSITORY,
         GITHUB_RUN_ID)
