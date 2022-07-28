@@ -558,5 +558,5 @@ if __name__ == "__main__":
         prev_path_test = 0
         prev_count_result = []
 
-    #main()
+    main()
 
