@@ -9,9 +9,10 @@ import zipfile, io
 import yaml
 from yaml.loader import SafeLoader
 import ruamel.yaml
-
+import traceback
 from ruamel.yaml.scalarstring import PreservedScalarString
 import textwrap
+import snowflake.connector
 
 ALWAYS_SEND = 'False'
 
@@ -101,6 +102,42 @@ def start_tests():
     return test_passed, result_test
 
 
+def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta=''):
+    if use_db != '':
+        entry = snowflake.connector.connect(
+            user=user_sf, password=password_sf, account="%s" % (account_sf),
+            database=use_db, schema=use_schema_meta)
+    else:
+        entry = snowflake.connector.connect(
+            user=user_sf, password=password_sf, account="%s" % (account_sf)
+        )
+    return entry
+
+
+def log_insert_snowflake(for_log_iter):
+    sql_log = """insert into DQ_LOG_RESULT_{8} (NAME_TEST,PATH_TO_TABLE, STATUS,RESULT,START_TIME_TS,ERROR_TEXT,
+            T_CHANGE_TS,LOGIC_QUERY,COMPANY,DURATION_REQUEST) values ('{0}','{1}','{2}','{3}','{4}','{5}',
+            '{6}','{7}','{8}','{9}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
+                                                for_log_iter['STATUS'], for_log_iter['RESULT']['value'],
+                                                for_log_iter['START_TIME'], for_log_iter['ERROR_TEXT'],
+                                                for_log_iter['INSERT_DATETIME'], for_log_iter['LOGIC_QUERY'],
+                                                for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
+                                                )
+
+    conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'], os.environ['SNOWFLAKE_ACCOUNT_META'],
+                                          use_db='BI__META', use_schema_meta='DQ')
+    try:
+        sf_cursor = conction_for_meta.cursor()
+        sf_cursor.execute(sql_log, timeout=900)
+        conction_for_meta.commit()
+
+    except  Exception:
+        print(sql_log)
+        print(traceback.format_exc())
+        print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'],))
+    conction_for_meta.close()
+
+
 def create_log_and_messages(result_test, now_int, now, test_passed):
     result_error = ''
     result_ok = ''
@@ -108,22 +145,23 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
     for_log = []
     for ch in result_test['checks']:
         name_test = ch['name'].split('.')[0]
-        for_log.append(
-            {"NAME_TEST": name_test,
-             "PATH_TO_TABLE": path_to_table,
-             "STATUS": ch["outcome"],
-             "RESULT": ch["diagnostics"],
-             "START_TIME": now_int,
-             "ERROR_TEXT": ch["name"],
-             "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
-             "LOGIC_QUERY": ch['definition'],
-             "COMPANY": COMPANY,
-             "DURATION_TESTS": (datetime.now() - now).total_seconds(),
+        for_log_iter = {"NAME_TEST": name_test,
+                        "PATH_TO_TABLE": path_to_table,
+                        "STATUS": ch["outcome"],
+                        "RESULT": ch["diagnostics"],
+                        "START_TIME": now_int,
+                        "ERROR_TEXT": ch["name"],
+                        "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
+                        "LOGIC_QUERY": ch['definition'],
+                        "COMPANY": COMPANY,
+                        "DURATION_TESTS": (datetime.now() - now).total_seconds(),
 
-             }
+                        }
+        for_log.append(
+            for_log_iter
         )
         if ch['outcome'] != "pass":
-            result_error = result_error + ch["name"] + "\n>"
+            result_error = result_error + ch["name"] + " *value=" + str(ch["diagnostics"]['value']) + "*\n>"
             count_result[name_test] = 0
         else:
             result_ok = result_ok + "--" + ch['name'].split('.')[0] + "\n>"
@@ -343,6 +381,23 @@ def generation_yml_for_manual_test():
                     yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
                 else:
                     should_not_start[get_shablons_tests[test]["name"].split('.')[0]] = test
+            elif test == 'custom_selects':
+                for custom_test in get_params[test]:
+                    for_custom_test = {}
+                    for custom_test_param in get_params[test][custom_test]:
+
+                        if "name" == custom_test_param:
+                            for_custom_test['name'] = ruamel.yaml.scalarstring.DoubleQuotedScalarString(
+                                get_params[test][custom_test]['name'])
+                        elif "schedule" == custom_test_param:
+                            pass
+                        else:
+                            for_custom_test[custom_test_param] = wrapped(
+                                get_params[test][custom_test][custom_test_param])
+                    if custom_test in list_tests or "all_tests" in list_tests:
+                        yml_for_soda['checks for ' + path_to_table].append({custom_test: for_custom_test})
+                    else:
+                        should_not_start[get_params[test][custom_test]["name"].split('.')[0]] = custom_test
 
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))
@@ -390,14 +445,41 @@ def generation_yml_for_test():
                         get_shablons_tests[test][i] = wrapped(get_shablons_tests[test][i])
                 if flag_all_test and "schedule" not in get_params[test]:
                     yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
-                elif flag_all_test and "schedule" in get_params[test] and get_params[test]['schedule'] == SCHEDULE:
-                    yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
-                elif not flag_all_test and "schedule" in get_params[test] and get_params[test]['schedule'] == SCHEDULE:
-                    yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
+                elif flag_all_test and "schedule" in get_params[test]:
+                    if get_params[test]['schedule'] == SCHEDULE:
+                        yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
+                elif not flag_all_test and "schedule" in get_params[test]:
+                    if get_params[test]['schedule'] == SCHEDULE:
+                        yml_for_soda['checks for ' + path_to_table].append({test: get_shablons_tests[test]})
                 else:
                     should_not_start[get_shablons_tests[test]["name"].split('.')[0]] = test
                 if "ALWAYS_SEND" in get_params[test]:
                     ALWAYS_SEND = get_params[test]['ALWAYS_SEND']
+            elif test == 'custom_selects':
+                for custom_test in get_params[test]:
+                    for_custom_test = {}
+                    for custom_test_param in get_params[test][custom_test]:
+
+                        if "name" == custom_test_param:
+                            for_custom_test['name'] = ruamel.yaml.scalarstring.DoubleQuotedScalarString(
+                                get_params[test][custom_test]['name'])
+                        elif "schedule" == custom_test_param:
+                            pass
+                        else:
+                            for_custom_test[custom_test_param] = wrapped(
+                                get_params[test][custom_test][custom_test_param])
+                    if flag_all_test and "schedule" not in get_params[test][custom_test]:
+                        yml_for_soda['checks for ' + path_to_table].append({custom_test: for_custom_test})
+                    elif flag_all_test and "schedule" in get_params[test][custom_test]:
+                        if get_params[test][custom_test]['schedule'] == SCHEDULE:
+                            yml_for_soda['checks for ' + path_to_table].append({custom_test: for_custom_test})
+                    elif not flag_all_test and "schedule" in get_params[test][custom_test]:
+                        if get_params[test][custom_test][
+                            'schedule'] == SCHEDULE:
+                            yml_for_soda['checks for ' + path_to_table].append({custom_test: for_custom_test})
+                    else:
+                        should_not_start[get_params[test][custom_test]["name"].split('.')[0]] = custom_test
+
 
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))
