@@ -1,7 +1,7 @@
-name: 0 * * * *
+name: 0 5 * * *
 on:
   schedule:
-  - cron: 0 * * * *
+  - cron: 0 5 * * *
   workflow_dispatch:
     inputs:
       logLevel:
@@ -14,6 +14,9 @@ jobs:
     strategy:
       matrix:
         table_path:
+        - simple_data.dm_finance.f_subscription
+        - simple_data.dm_dashboard.f_user_activity
+        - simple_data.dm_finance.f_transaction
         - simple_data.stg_finance.f_revenuecat_event
     steps:
     - uses: actions/checkout@v3
@@ -40,7 +43,7 @@ jobs:
         DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
         PATH_TO_TABLE: ${{ matrix.table_path }}
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-        SCHEDULE: 0 * * * *
+        SCHEDULE: 0 5 * * *
         ALWAYS_SEND: 'False'
       run: 'python3 main.py
 
