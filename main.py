@@ -15,6 +15,7 @@ import textwrap
 import snowflake.connector
 
 ALWAYS_SEND = 'False'
+EMAILS = ''
 
 
 def wrapped(s, width=60):
@@ -100,14 +101,14 @@ def start_tests():
     return test_passed, result_test
 
 
-def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta='',warehouse=''):
+def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta='', warehouse=''):
     if use_db != '':
         entry = snowflake.connector.connect(
             user=user_sf, password=password_sf, account="%s" % (account_sf),
             database=use_db, schema=use_schema_meta, warehouse=warehouse)
     else:
         entry = snowflake.connector.connect(
-            user=user_sf, password=password_sf, account="%s" % (account_sf),warehouse=warehouse
+            user=user_sf, password=password_sf, account="%s" % (account_sf), warehouse=warehouse
         )
     return entry
 
@@ -118,13 +119,15 @@ def log_insert_snowflake(for_log_iter):
             '{6}','{7}','{8}','{9}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
                                                 for_log_iter['STATUS'], for_log_iter['RESULT']['value'],
                                                 for_log_iter['START_TIME'], for_log_iter['ERROR_TEXT'],
-                                                for_log_iter['INSERT_DATETIME'], for_log_iter['LOGIC_QUERY'].replace("'","''"),
+                                                for_log_iter['INSERT_DATETIME'],
+                                                for_log_iter['LOGIC_QUERY'].replace("'", "''"),
                                                 for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
                                                 )
 
     conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'],
                                           os.environ['SNOWFLAKE_ACCOUNT_META'],
-                                          use_db='BI__META', use_schema_meta='DQ',warehouse=os.environ['SNOWFLAKE_WAREHOUSE_META'])
+                                          use_db='BI__META', use_schema_meta='DQ',
+                                          warehouse=os.environ['SNOWFLAKE_WAREHOUSE_META'])
 
     try:
         sf_cursor = conction_for_meta.cursor()
@@ -136,6 +139,7 @@ def log_insert_snowflake(for_log_iter):
         print(traceback.format_exc())
         print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'], ))
     conction_for_meta.close()
+
 
 def send_email(user, pwd, recipient, subject, body):
     import smtplib
@@ -232,18 +236,18 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
             log_erros,
             ensure_ascii=False,
             indent=4)
-        for_log_iter={"NAME_TEST": "",
-             "PATH_TO_TABLE": path_to_table,
-             "STATUS": "tests not start",
-             "RESULT": "",
-             "START_TIME": now_int,
-             "ERROR_TEXT": "",
-             "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
-             "LOGIC_QUERY": result_test['logs'],
-             "COMPANY": COMPANY,
-             "DURATION_TESTS": (datetime.now() - now).total_seconds(),
+        for_log_iter = {"NAME_TEST": "",
+                        "PATH_TO_TABLE": path_to_table,
+                        "STATUS": "tests not start",
+                        "RESULT": "",
+                        "START_TIME": now_int,
+                        "ERROR_TEXT": "",
+                        "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
+                        "LOGIC_QUERY": result_test['logs'],
+                        "COMPANY": COMPANY,
+                        "DURATION_TESTS": (datetime.now() - now).total_seconds(),
 
-             }
+                        }
         for_log.append(
             for_log_iter
         )
@@ -286,11 +290,15 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
 
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
+        if EMAILS != '':
+            send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
     else:
         if prev_path_test != test_passed:
 
             perv_how_long_status_local = 0
             send_messeg_to_slake(text_e, hooks)
+            if EMAILS != '':
+                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         elif (prev_len_res != len(
                 for_log) or prev_count_result != count_result) and (
                 len(prev_count_result) != 0 and (
@@ -298,12 +306,16 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
 
             perv_how_long_status = perv_how_long_status_local + 1
             send_messeg_to_slake(text_e, hooks)
+            if EMAILS != '':
+                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         else:
 
             perv_how_long_status = perv_how_long_status_local + 1
             if (test_passed == 1 or test_passed == 2 or test_passed == 3) and perv_how_long_status_local % 5 == 0:
                 text_e = text_e + "*The error was repeated {0} times*".format(perv_how_long_status_local)
                 send_messeg_to_slake(text_e, hooks)
+                if EMAILS != '':
+                    send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
 
     # send_messeg_to_slake(text_e, hooks)
     for_status['STATUS'] = test_passed
@@ -388,6 +400,9 @@ def generation_yml_for_manual_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
+    if 'EMAILS' in os.environ:
+        global EMAILS
+        EMAILS = os.environ['EMAILS']
     if os.environ["CHANNEL_CUSTOM"] != '1':
         global hooks
         hooks = os.environ["CHANNEL_CUSTOM"]
@@ -445,7 +460,12 @@ def generation_yml_for_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
+    global EMAILS
+    if 'EMAILS' in get_params:
 
+        EMAILS = get_params['EMAILS']
+    else:
+        EMAILS = ''
     if 'schedule' in get_params:
         if get_params['schedule'] == SCHEDULE:
             flag_all_test = True
@@ -561,4 +581,3 @@ if __name__ == "__main__":
         prev_count_result = []
 
     main()
-
