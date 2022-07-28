@@ -281,7 +281,7 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
     global perv_how_long_status
     for_status = {}
     perv_how_long_status_local = perv_how_long_status
-    send_email("serikbol.i@gmail.com", 'htbdpbzejhphtlnz', 'serikbol.i@gmail.com', path_to_table, text_e)
+
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
     else:
