@@ -1,4 +1,5 @@
 simple_data.dm_finance.f_subscription:
+  CHANNEL_SLACK: TEST_CHANNEL
   schedule: '0 5 * * *'
   custom_selects:
     All_amounts = 0:
@@ -40,6 +41,7 @@ CROSS JOIN (
   WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -7, CURRENT_DATE())
 ) AS TOTAL"
 simple_data.dm_dashboard.f_user_activity:
+  CHANNEL_SLACK: TEST_CHANNEL
   schedule: "0 5 * * *"
   ALWAYS_SEND: 'False'
   freshness_date > 0:
@@ -50,11 +52,13 @@ simple_data.dm_dashboard.f_user_activity:
       name: "The number of installation is greater than the number of total actions. Need to check the data.diff={res_test:.2f}%.."
       the_number_of_installation query: "select case when sum(ACTIVE_USERS)<sum(INSTALLS) then 1 else 0 end as res   from simple_data.dm_dashboard.f_user_activity where REPORT_DT >= current_timestamp - INTERVAL '72h'"
 simple_data.dm_finance.f_transaction:
+  CHANNEL_SLACK: TEST_CHANNEL
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_colum: 'TRANSACTION_TS'
     interval: '24h'
 simple_data.stg_finance.f_revenuecat_event:
+  CHANNEL_SLACK: TEST_CHANNEL
   schedule: "0 * * * *"
   freshness_date > 0:
     time_colum: 'EVENT_TIMESTAMP'
@@ -70,6 +74,7 @@ simple_data.stg_finance.f_revenuecat_event:
     num_days: '3'
 
 simple_data.stg_finance.f_revenuecat_subscription:
+  CHANNEL_SLACK: TEST_CHANNEL
   schedule: "0 */8 * * *"
   freshness_date > 0:
     time_colum: 'T_SF_LOAD_TS'
