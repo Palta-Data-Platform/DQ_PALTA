@@ -18,6 +18,7 @@ jobs:
         - simple_data.dm_dashboard.f_user_activity
         - simple_data.dm_finance.f_transaction
         - simple_data.stg_finance.f_revenuecat_event
+        - simple_data.stg_finance.f_revenuecat_subscription
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
