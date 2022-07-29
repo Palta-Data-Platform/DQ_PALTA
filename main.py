@@ -15,18 +15,17 @@ import textwrap
 import snowflake.connector
 
 ALWAYS_SEND = 'False'
+EMAILS = ''
 
 
 def wrapped(s, width=60):
     return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
 
-# TODO ручной запуск работает, только проблема откуда брать статус работы теста и результат
 # TODO использова tempfile
 # TODO Использовать шаблон для slack сообщений
 # TODO добавить отправление по emails
 # TODO продумать если несколько репозиториев с разными тестами, как выдавать общий статус по таблице
-# TODO добавить логирование
 # TODO Добавить тесты на аномалии
 
 
@@ -102,14 +101,14 @@ def start_tests():
     return test_passed, result_test
 
 
-def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta=''):
+def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_meta='', warehouse=''):
     if use_db != '':
         entry = snowflake.connector.connect(
             user=user_sf, password=password_sf, account="%s" % (account_sf),
-            database=use_db, schema=use_schema_meta)
+            database=use_db, schema=use_schema_meta, warehouse=warehouse)
     else:
         entry = snowflake.connector.connect(
-            user=user_sf, password=password_sf, account="%s" % (account_sf)
+            user=user_sf, password=password_sf, account="%s" % (account_sf), warehouse=warehouse
         )
     return entry
 
@@ -120,12 +119,16 @@ def log_insert_snowflake(for_log_iter):
             '{6}','{7}','{8}','{9}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
                                                 for_log_iter['STATUS'], for_log_iter['RESULT']['value'],
                                                 for_log_iter['START_TIME'], for_log_iter['ERROR_TEXT'],
-                                                for_log_iter['INSERT_DATETIME'], for_log_iter['LOGIC_QUERY'],
+                                                for_log_iter['INSERT_DATETIME'],
+                                                for_log_iter['LOGIC_QUERY'].replace("'", "''"),
                                                 for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
                                                 )
 
-    conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'], os.environ['SNOWFLAKE_ACCOUNT_META'],
-                                          use_db='BI__META', use_schema_meta='DQ')
+    conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'],
+                                          os.environ['SNOWFLAKE_ACCOUNT_META'],
+                                          use_db='BI__META', use_schema_meta='DQ',
+                                          warehouse=os.environ['SNOWFLAKE_WAREHOUSE_META'])
+
     try:
         sf_cursor = conction_for_meta.cursor()
         sf_cursor.execute(sql_log, timeout=900)
@@ -134,8 +137,38 @@ def log_insert_snowflake(for_log_iter):
     except  Exception:
         print(sql_log)
         print(traceback.format_exc())
-        print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'],))
+        print("DQ_LOG_RESULT_{0} недоступен".format(for_log_iter['COMPANY'], ))
     conction_for_meta.close()
+
+
+def send_email(user, pwd, recipient, subject, body):
+    import smtplib
+
+    FROM = user
+    TO = recipient if isinstance(recipient, list) else [recipient]
+    SUBJECT = subject
+    TEXT = body
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (
+        FROM,
+        ", ".join(TO),
+        SUBJECT,
+        TEXT,
+    )
+    message = message.encode('utf-8')
+    try:
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(user, pwd)
+        server.sendmail(FROM, TO, message)
+        server.close()
+        print("successfully sent the mail")
+    except:
+        print("failed to send mail")
+        print(traceback.format_exc())
 
 
 def create_log_and_messages(result_test, now_int, now, test_passed):
@@ -166,6 +199,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         else:
             result_ok = result_ok + "--" + ch['name'].split('.')[0] + "\n>"
             count_result[name_test] = 1
+        log_insert_snowflake(for_log_iter)
     if "FOR_LOG" in prev_for_log:
         for ch in prev_for_log["FOR_LOG"]:
 
@@ -202,20 +236,22 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
             log_erros,
             ensure_ascii=False,
             indent=4)
-        for_log.append(
-            {"NAME_TEST": "",
-             "PATH_TO_TABLE": path_to_table,
-             "STATUS": "tests not start",
-             "RESULT": "",
-             "START_TIME": now_int,
-             "ERROR_TEXT": "",
-             "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
-             "LOGIC_QUERY": result_test['logs'],
-             "COMPANY": COMPANY,
-             "DURATION_TESTS": (datetime.now() - now).total_seconds(),
+        for_log_iter = {"NAME_TEST": "",
+                        "PATH_TO_TABLE": path_to_table,
+                        "STATUS": "tests not start",
+                        "RESULT": "",
+                        "START_TIME": now_int,
+                        "ERROR_TEXT": "",
+                        "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
+                        "LOGIC_QUERY": result_test['logs'],
+                        "COMPANY": COMPANY,
+                        "DURATION_TESTS": (datetime.now() - now).total_seconds(),
 
-             }
+                        }
+        for_log.append(
+            for_log_iter
         )
+        log_insert_snowflake(for_log_iter)
     link_to_git_workflow = "https://github.com/{0}/actions/runs/{1}".format(
         GITHUB_REPOSITORY,
         GITHUB_RUN_ID)
@@ -254,11 +290,15 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
 
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
+        if EMAILS != '':
+            send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
     else:
         if prev_path_test != test_passed:
 
             perv_how_long_status_local = 0
             send_messeg_to_slake(text_e, hooks)
+            if EMAILS != '':
+                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         elif (prev_len_res != len(
                 for_log) or prev_count_result != count_result) and (
                 len(prev_count_result) != 0 and (
@@ -266,12 +306,16 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
 
             perv_how_long_status = perv_how_long_status_local + 1
             send_messeg_to_slake(text_e, hooks)
+            if EMAILS != '':
+                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         else:
 
             perv_how_long_status = perv_how_long_status_local + 1
             if (test_passed == 1 or test_passed == 2 or test_passed == 3) and perv_how_long_status_local % 5 == 0:
                 text_e = text_e + "*The error was repeated {0} times*".format(perv_how_long_status_local)
                 send_messeg_to_slake(text_e, hooks)
+                if EMAILS != '':
+                    send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
 
     # send_messeg_to_slake(text_e, hooks)
     for_status['STATUS'] = test_passed
@@ -356,6 +400,9 @@ def generation_yml_for_manual_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
+    if 'EMAILS' in os.environ:
+        global EMAILS
+        EMAILS = os.environ['EMAILS']
     if os.environ["CHANNEL_CUSTOM"] != '1':
         global hooks
         hooks = os.environ["CHANNEL_CUSTOM"]
@@ -413,7 +460,12 @@ def generation_yml_for_test():
         get_params = yaml.load(f, Loader=SafeLoader)[path_to_table]
 
         print(json.dumps(get_params))
+    global EMAILS
+    if 'EMAILS' in get_params:
 
+        EMAILS = get_params['EMAILS']
+    else:
+        EMAILS = ''
     if 'schedule' in get_params:
         if get_params['schedule'] == SCHEDULE:
             flag_all_test = True
@@ -479,7 +531,6 @@ def generation_yml_for_test():
                             yml_for_soda['checks for ' + path_to_table].append({custom_test: for_custom_test})
                     else:
                         should_not_start[get_params[test][custom_test]["name"].split('.')[0]] = custom_test
-
 
         print(json.dumps(get_shablons_tests))
     print(json.dumps(yml_for_soda))

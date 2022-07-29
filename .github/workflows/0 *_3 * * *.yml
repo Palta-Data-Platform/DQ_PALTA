@@ -33,6 +33,10 @@ jobs:
         SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
         SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        SNOWFLAKE_USER_META: ${{ secrets.SNOWFLAKE_USER_META }}
+        SNOWFLAKE_PASSWORD_META: ${{ secrets.SNOWFLAKE_PASSWORD_META }}
+        SNOWFLAKE_ACCOUNT_META: ${{ secrets.SNOWFLAKE_ACCOUNT_META }}
+        SNOWFLAKE_WAREHOUSE_META: ${{ secrets.SNOWFLAKE_WAREHOUSE_META }}
         CHANNEL: ${{ secrets.CHANNEL }}
         COMPANY: ${{ secrets.COMPANY }}
         EMAILS: ${{ secrets.EMAILS }}
@@ -42,6 +46,7 @@ jobs:
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         SCHEDULE: 0 */3 * * *
         ALWAYS_SEND: 'False'
+        TEST_CHANNEL: ${{ secrets.TEST_CHANNEL }}
       run: 'python3 main.py
 
         '
