@@ -93,7 +93,7 @@ paced_data.stg_telemetry.f_user_event:
       interval: '24h'
     dublicate = 0:
       schedule: "0 */3 * * *"
-      time_colum: 'EVENT_TIMESTAMP'
+      time_colum: 'SERVER_UPLOAD_TIME'
       interval: '72h'
       unics_colums: 'UUID'
 simple_data.stg_finance.f_source_refund:
