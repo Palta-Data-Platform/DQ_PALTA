@@ -291,14 +291,14 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
         if EMAILS != '':
-            send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
+            send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
     else:
         if prev_path_test != test_passed:
 
             perv_how_long_status_local = 0
             send_messeg_to_slake(text_e, hooks)
             if EMAILS != '':
-                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
+                send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         elif (prev_len_res != len(
                 for_log) or prev_count_result != count_result) and (
                 len(prev_count_result) != 0 and (
@@ -307,7 +307,7 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
             perv_how_long_status = perv_how_long_status_local + 1
             send_messeg_to_slake(text_e, hooks)
             if EMAILS != '':
-                send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
+                send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         else:
 
             perv_how_long_status = perv_how_long_status_local + 1
@@ -315,7 +315,7 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
                 text_e = text_e + "*The error was repeated {0} times*".format(perv_how_long_status_local)
                 send_messeg_to_slake(text_e, hooks)
                 if EMAILS != '':
-                    send_email(os.environ['SENDS_EMAILS'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
+                    send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
 
     # send_messeg_to_slake(text_e, hooks)
     for_status['STATUS'] = test_passed
