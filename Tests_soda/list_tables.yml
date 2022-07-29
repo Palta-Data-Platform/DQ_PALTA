@@ -1,5 +1,6 @@
 simple_data.dm_finance.f_subscription:
   CHANNEL_SLACK: TEST_CHANNEL
+  EMAILS: [Serikbol.i@gmail.com,serikbol.ikhsanov@palta.com]
   schedule: '0 5 * * *'
   custom_selects:
     All_amounts = 0:
@@ -72,7 +73,6 @@ simple_data.stg_finance.f_revenuecat_event:
     schedule: "0 5 * * *"
     time_colum: 'EVENT_TIMESTAMP'
     num_days: '3'
-
 simple_data.stg_finance.f_revenuecat_subscription:
   CHANNEL_SLACK: TEST_CHANNEL
   schedule: "0 */8 * * *"
