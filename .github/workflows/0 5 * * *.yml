@@ -40,6 +40,8 @@ jobs:
         SNOWFLAKE_PASSWORD_META: ${{ secrets.SNOWFLAKE_PASSWORD_META }}
         SNOWFLAKE_ACCOUNT_META: ${{ secrets.SNOWFLAKE_ACCOUNT_META }}
         SNOWFLAKE_WAREHOUSE_META: ${{ secrets.SNOWFLAKE_WAREHOUSE_META }}
+        PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+        SEND_EMAIL: ${{ secrets.SEND_EMAIL }}
         CHANNEL: ${{ secrets.CHANNEL }}
         COMPANY: ${{ secrets.COMPANY }}
         EMAILS: ${{ secrets.EMAILS }}

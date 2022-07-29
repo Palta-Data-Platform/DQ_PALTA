@@ -20,6 +20,9 @@ on:
       id:
         description: 'run identifier'
         required: false
+      EMAILS:
+        description: 'where to send emails'
+        required: false
 
 jobs:
   build:
@@ -46,7 +49,7 @@ jobs:
           CHANNEL: ${{ secrets.CHANNEL }}
           CHANNEL_CUSTOM:  ${{ github.event.inputs.CHANNEL }}
           COMPANY:  ${{ secrets.COMPANY }}
-          EMAILS: ${{ secrets.EMAILS }}
+          EMAILS: ${{ github.event.inputs.EMAILS }}
           API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
           DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
           PATH_TO_TABLE: ${{ github.event.inputs.Path }}
