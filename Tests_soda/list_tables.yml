@@ -85,6 +85,3 @@ simple_data.stg_finance.f_revenuecat_subscription:
     time_colum: 'T_SF_LOAD_TS'
     interval: '3d'
     unics_colums: "STORE_TRANSACTION_ID,START_TIME"
-  anomaly score for row_count < default:
-    time_colum: 'T_SF_LOAD_TS'
-    interval: '26h'
