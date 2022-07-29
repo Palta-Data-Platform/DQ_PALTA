@@ -1,5 +1,6 @@
 simple_data.dm_finance.f_subscription:
   CHANNEL_SLACK: TEST_CHANNEL
+  ALWAYS_SEND: True
   EMAILS: [Serikbol.i@gmail.com,serikbol.ikhsanov@palta.com]
   schedule: '0 5 * * *'
   custom_selects:
