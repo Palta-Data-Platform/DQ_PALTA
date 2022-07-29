@@ -81,7 +81,204 @@ simple_data.stg_finance.f_revenuecat_subscription:
     time_colum: 'T_SF_LOAD_TS'
     interval: '26h'
   dublicate = 0:
-    schedule: "0 5 */3 * *"
+    schedule: "0 5 * * *"
     time_colum: 'T_SF_LOAD_TS'
     interval: '3d'
     unics_colums: "STORE_TRANSACTION_ID,START_TIME"
+paced_data.stg_telemetry.f_user_event:
+    schedule: "0 0 * * *"
+    CHANNEL_SLACK: TEST_CHANNEL
+    freshness_date > 0:
+      time_colum: 'SERVER_UPLOAD_TIME'
+      interval: '24h'
+    dublicate = 0:
+      schedule: "0 */3 * * *"
+      time_colum: 'EVENT_TIMESTAMP'
+      interval: '72h'
+      unics_colums: 'UUID'
+simple_data.stg_finance.f_source_refund:
+  schedule: "0 0 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  freshness_date > 0:
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '48h'
+simple_data.stg_telemetry.d_user_profile:
+  schedule: "0 0 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  freshness_date > 0:
+    time_colum: 'T_CHANGE_TS'
+    interval: '28h'
+simple_data.stg_telemetry.f_amplitude_event:
+  schedule: "0 0 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  freshness_date > 0:
+    time_colum: 'T_CHANGE_TS'
+    interval: '24h'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_colum: 'T_CHANGE_TS'
+    interval: '72h'
+    unics_colums: 'UUID'
+simple_data.stg_telemetry.f_user_event:
+  schedule: "0 * * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  Errors_in_loading_history = 0:
+    interval: '60m'
+  freshness_date > 0:
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '60m'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '72h'
+    unics_colums: 'UUID'
+  custom_selects:
+    No_Web = 0:
+      name: "There is no Web in event for the last hour.Event Analytics is partially unavailable"
+      No_Web query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='Web'  LIMIT 50\n"
+    No_Android = 0:
+      name: "There is no Android in event for the last hour.Event Analytics is partially unavailable"
+      No_Android query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='Android'  LIMIT 50\n"
+    for_missing_days_for_3_days = 0:
+      schedule: "0 5 * * *"
+      name: "There are missed days. {res_test}. Loading this table"
+      for_missing_days_for_3_days query:  "select case when (count(1)<3 or median(ct)/min(ct)>=2)then 1 else 0 end from (select DATE_TRUNC('day',EVENT_TIME),count(1) as ct from simple_data.stg_telemetry.f_user_event where DATE_TRUNC('day',EVENT_TIME)>=CURRENT_DATE()-INTERVAL '3d' and DATE_TRUNC('day',EVENT_TIME)<CURRENT_DATE() group by 1)"
+    No_IOS= 0:
+      schedule: "0 5 * * *"
+      name: "There is no iOS in event for the last hour.Event Analytics is partially unavailable"
+      No_Android query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='iOS'  LIMIT 50\n"
+simple_data.stg_telemetry.idmap_user:
+  schedule: "0 0 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  freshness_date > 0:
+    time_colum: 'T_CHANGE_TS'
+    interval: '26h'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_colum: 'T_CHANGE_TS'
+    interval: '72h'
+    unics_colums: "USER_ID,PALTABRAIN_ID"
+simple_data.wrk_stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
+  Errors_in_loading_history = 0:
+    interval: '60m'
+simple_data.wrk_stg_finance.f_revenuecat_subscription:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '24h'
+  freshness_date > 0:
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '26h'
+  custom_selects:
+    app_store = 0:
+      name: "There is no app_store in subscriptions for the last 26 hours.Payment Analytics is partially unavailable"
+      app_store query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.wrk_stg_finance.f_revenuecat_subscription where T_SF_LOAD_TS>current_timestamp -INTERVAL '26h' and STORE='app_store' LIMIT 50"
+simple_data.wrk_stg_telemetry.idmap_user:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '24h'
+weather_data.stg_telemetry.f_user_event:
+  schedule: "0 */3 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '72h'
+    unics_colums: "UUID"
+  freshness_date > 0:
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '3h'
+zing_data.dm_dashboard.f_user_activity:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_colum: 'REPORT_DT'
+    interval: '72h'
+    unics_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
+  freshness_date > 0:
+    time_colum: 'REPORT_DT'
+    interval: '48h'
+zing_data.dm_finance.f_transaction:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_colum: 'TRANSACTION_TS'
+    interval: '72h'
+    unics_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
+  freshness_date > 0:
+    time_colum: 'TRANSACTION_TS'
+    interval: '24h'
+zing_data.stg_finance.f_revenuecat_event:
+  schedule: "0 */3 * * *"
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_colum: 'EVENT_TIMESTAMP'
+    interval: '72h'
+    unics_colums: "ID"
+  freshness_date > 0:
+    time_colum: 'EVENT_TIMESTAMP'
+    interval: '180m'
+zing_data.stg_finance.f_revenuecat_subscription:
+  schedule: "0 */3 * * *"
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '72h'
+    unics_colums: "STORE_TRANSACTION_ID,START_TIME"
+  freshness_date > 0:
+    time_colum: 'T_SF_LOAD_TS'
+    interval: '26h'
+zing_data.stg_telemetry.d_user_profile:
+  schedule: "0 */3 * * *"
+  freshness_date > 0:
+    time_colum: 'T_CHANGE_TS'
+    interval: '26h'
+zing_data.stg_telemetry.f_user_event:
+  schedule: "0 * * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  Errors_in_loading_history = 0:
+    interval: '60m'
+  freshness_date > 0:
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '60m'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_colum: 'SERVER_UPLOAD_TIME'
+    interval: '72h'
+    unics_colums: 'UUID'
+  custom_selects:
+    for_missing_days_for_3_days = 0:
+      schedule: "0 5 * * *"
+      name: "There are missed days. {res_test}. Loading this table"
+      for_missing_days_for_3_days query: "select case when (count(1)<3 or median(ct)/min(ct)>=2)then 1 else 0 end from (select DATE_TRUNC('day',EVENT_TIME),count(1) as ct from zing_data.stg_telemetry.f_user_event where DATE_TRUNC('day',EVENT_TIME)>=CURRENT_DATE()-INTERVAL '3d' and DATE_TRUNC('day',EVENT_TIME)<CURRENT_DATE() group by 1)"
+zing_data.stg_telemetry.idmap_user:
+  schedule: "0 */4 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  freshness_date > 0:
+    time_colum: 'T_CHANGE_TS'
+    interval: '26h'
+zing_data.wrk_stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  Errors_in_loading_history = 0:
+    interval: '60m'
+zing_data.wrk_stg_telemetry.d_user_profile:
+  schedule: "0 */4 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  Errors_in_loading_history = 0:
+    interval: '24h'
+zing_data.wrk_stg_telemetry.idmap_user:
+  schedule: "0 */4 * * *"
+  CHANNEL_SLACK: TEST_CHANNEL
+  Errors_in_loading_history = 0:
+    interval: '24h'
+
+
+
+
+
