@@ -162,27 +162,27 @@ def log_insert_snowflake(for_log_iter):
 
 def send_email(user, pwd, recipient, subject, body):
     import smtplib
-
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
     FROM = user
     TO = recipient if isinstance(recipient, list) else [recipient]
     SUBJECT = subject
-    TEXT = body
-
+    TEXT = body.replace("*",'').replace(">",'')
+    message = MIMEMultipart("alternative")
+    message["Subject"] = SUBJECT
+    message["From"] = FROM
+    message["To"] =  ", ".join(TO)
     # Prepare actual message
-    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
-    """ % (
-        FROM,
-        ", ".join(TO),
-        SUBJECT,
-        TEXT,
-    )
-    message = message.encode('utf-8')
+
+    part2 = MIMEText(TEXT, "plain")
+    message.attach(part2)
+
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.ehlo()
         server.starttls()
         server.login(user, pwd)
-        server.sendmail(FROM, TO, message)
+        server.sendmail(FROM, TO, message.as_string())
         server.close()
         print("successfully sent the mail")
     except:
@@ -191,6 +191,7 @@ def send_email(user, pwd, recipient, subject, body):
 
 
 def create_log_and_messages(result_test, now_int, now, test_passed):
+
     result_error = ''
     result_ok = ''
     count_result = {}
@@ -244,14 +245,20 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
     table = "*Table:" + path_to_table + "*"
     if test_passed == 0:
         text_e = ":white_check_mark:" + table + " all checks passed " + "\n>" + result_ok
+        text_email=table + "all checks passed" + "\n>" + result_ok
     elif test_passed == 1 or test_passed == 2:
         text_e = ":bangbang: " + table + ' Have_failure' + "\n>" + result_error
+        text_email=table + ' Have_failure' + "\n>" + result_error
     else:
         log_erros = []
         for i in result_test['logs']:
             if i['level'] == "error":
                 log_erros.append(i)
         text_e = ":fire: " + table + " test not start,Soda encountered a runtime issue " + "\n" + json.dumps(
+            log_erros,
+            ensure_ascii=False,
+            indent=4)
+        text_email =table + " test not start,Soda encountered a runtime issue " + "\n" + json.dumps(
             log_erros,
             ensure_ascii=False,
             indent=4)
@@ -278,7 +285,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
     link_to_git_workflow_slack = "<" + link_to_git_workflow + " |link to the test workflow>\n>"
 
     text_e = text_e + link_to_git_workflow_slack
-
+    text_email=text_email+link_to_git_workflow_slack
     # Atlan
     get_info_atlan = GetPutInfoAtlan(API_KEY_ATLAN, DOMMEN_ATLAN)
     link_to_atlan = ''
@@ -292,17 +299,30 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         text_e = text_e + owners_experts
         text_e = text_e + dependents
         get_info_atlan.put_atlan(guid, test_passed, result_error, for_log, link_to_git_workflow, should_not_start)
+        text_email = text_email + link_to_atlan
+        text_email = text_email + owners_experts
+        text_email = text_email + dependents
     else:
         if test_passed == 3:
             print("problems with tests")
         else:
             print("problems with atlan")
     # Atlan
+    html = f"""\
+        <html>
+          <body>
+            <p>Table:{path_to_table}<br>
+               How are you?<br>
+               <a href="http://www.realpython.com">Real Python</a> 
+               has many great tutorials.
+            </p>
+          </body>
+        </html>
+        """
+    return text_e, for_log, count_result, link_to_atlan,text_email
 
-    return text_e, for_log, count_result, link_to_atlan
 
-
-def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan):
+def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan,text_email):
     global perv_how_long_status
     for_status = {}
     perv_how_long_status_local = perv_how_long_status
@@ -310,7 +330,7 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
     if ALWAYS_SEND == 'True':
         send_messeg_to_slake(text_e, hooks)
         if EMAILS != '':
-            send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
+            send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_email)
     else:
         if prev_path_test != test_passed:
 
@@ -402,10 +422,10 @@ def main():
     else:
         generation_yml_for_test()
     test_passed, result_test = start_tests()
-    text_e, for_log, count_result, link_to_atlan = create_log_and_messages(result_test, now_int,
+    text_e, for_log, count_result, link_to_atlan,text_email = create_log_and_messages(result_test, now_int,
                                                                            now,
                                                                            test_passed)
-    wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan)
+    wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_atlan,text_email)
 
 
 def represent_literal(dumper, data):
