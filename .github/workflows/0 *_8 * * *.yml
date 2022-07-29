@@ -44,6 +44,9 @@ jobs:
         EMAILS: ${{ secrets.EMAILS }}
         API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
         DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
+        SODA_CLOUD: ${{ secrets.SODA_CLOUD }}
+        API_KEY_ID_SODA: ${{ secrets.API_KEY_ID_SODA }}
+        API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
         PATH_TO_TABLE: ${{ matrix.table_path }}
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         SCHEDULE: 0 */8 * * *

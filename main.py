@@ -82,21 +82,40 @@ def build_scan_results(scan) -> dict:
 def start_tests():
     scan = Scan()
     scan.set_data_source_name("source")
-    scan.add_configuration_yaml_str(
-        f"""
-        data_source {"source"}:
-          type: 'snowflake'
-          connection:
-            username: {SNOWFLAKE_USER}
-            password: {SNOWFLAKE_PASSWORD}
-            account: {SNOWFLAKE_ACCOUNT}
-            warehouse: {SNOWFLAKE_WAREHOUSE}
-    """
-    )
+    scan.set_scan_definition_name(path_to_table)
+
+    if SODA_CLOUD=='True':
+        scan.add_configuration_yaml_str(
+            f"""
+                data_source {"source"}:
+                  type: 'snowflake'
+                  connection:
+                    username: {SNOWFLAKE_USER}
+                    password: {SNOWFLAKE_PASSWORD}
+                    account: {SNOWFLAKE_ACCOUNT}
+                    warehouse: {SNOWFLAKE_WAREHOUSE}
+                soda_cloud:
+                  host: cloud.soda.io
+                  api_key_id: {API_KEY_ID_SODA}
+                  api_key_secret: {API_KEY_SECRET_SODA}
+            """
+        )
+    else:
+        scan.add_configuration_yaml_str(
+            f"""
+                data_source {"source"}:
+                  type: 'snowflake'
+                  connection:
+                    username: {SNOWFLAKE_USER}
+                    password: {SNOWFLAKE_PASSWORD}
+                    account: {SNOWFLAKE_ACCOUNT}
+                    warehouse: {SNOWFLAKE_WAREHOUSE}
+            """
+        )
     scan.add_sodacl_yaml_files("temp/{}.yml".format(path_to_table))
     test_passed = scan.execute()
     result_test = build_scan_results(scan)
-    # print(json.dumps(result_test))
+    print(json.dumps(result_test))
     # print(test_passed)
     return test_passed, result_test
 
@@ -239,11 +258,11 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         for_log_iter = {"NAME_TEST": "",
                         "PATH_TO_TABLE": path_to_table,
                         "STATUS": "tests not start",
-                        "RESULT": "",
+                        "RESULT": {'value':-1},
                         "START_TIME": now_int,
                         "ERROR_TEXT": "",
                         "INSERT_DATETIME": int(datetime.utcnow().timestamp()),
-                        "LOGIC_QUERY": result_test['logs'],
+                        "LOGIC_QUERY": json.dumps(log_erros),
                         "COMPANY": COMPANY,
                         "DURATION_TESTS": (datetime.now() - now).total_seconds(),
 
@@ -557,6 +576,14 @@ if __name__ == "__main__":
     DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
     GITHUB_RUN_ID = os.environ["GITHUB_RUN_ID"]
     SCHEDULE = os.environ["SCHEDULE"]
+    if 'SODA_CLOUD' in os.environ:
+        SODA_CLOUD =os.environ["SODA_CLOUD"]
+        API_KEY_ID_SODA = os.environ["API_KEY_ID_SODA"]
+        API_KEY_SECRET_SODA = os.environ["API_KEY_SECRET_SODA"]
+    else:
+        SODA_CLOUD='False'
+
+
     print(os.environ)
     get_previous_result()
     if SCHEDULE == 'Manual':
