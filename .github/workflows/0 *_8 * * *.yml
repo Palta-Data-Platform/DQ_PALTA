@@ -15,6 +15,10 @@ jobs:
       matrix:
         table_path:
         - simple_data.stg_finance.f_revenuecat_subscription
+        - simple_data.wrk_stg_finance.f_revenuecat_subscription
+        - simple_data.wrk_stg_telemetry.idmap_user
+        - zing_data.dm_dashboard.f_user_activity
+        - zing_data.dm_finance.f_transaction
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}

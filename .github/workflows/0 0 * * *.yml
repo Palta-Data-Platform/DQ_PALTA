@@ -1,7 +1,7 @@
-name: 0 */3 * * *
+name: 0 0 * * *
 on:
   schedule:
-  - cron: 0 */3 * * *
+  - cron: 0 0 * * *
   workflow_dispatch:
     inputs:
       logLevel:
@@ -14,16 +14,16 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.stg_finance.f_revenuecat_event
         - paced_data.stg_telemetry.f_user_event
+        - simple_data.stg_finance.f_source_refund
+        - simple_data.stg_telemetry.d_user_profile
         - simple_data.stg_telemetry.f_amplitude_event
-        - simple_data.stg_telemetry.f_user_event
         - simple_data.stg_telemetry.idmap_user
         - weather_data.stg_telemetry.f_user_event
+        - zing_data.dm_dashboard.f_user_activity
+        - zing_data.dm_finance.f_transaction
         - zing_data.stg_finance.f_revenuecat_event
         - zing_data.stg_finance.f_revenuecat_subscription
-        - zing_data.stg_telemetry.d_user_profile
-        - zing_data.stg_telemetry.f_user_event
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -58,7 +58,7 @@ jobs:
         API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
         PATH_TO_TABLE: ${{ matrix.table_path }}
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-        SCHEDULE: 0 */3 * * *
+        SCHEDULE: 0 0 * * *
         ALWAYS_SEND: 'False'
         TEST_CHANNEL: ${{ secrets.TEST_CHANNEL }}
       run: 'python3 main.py
