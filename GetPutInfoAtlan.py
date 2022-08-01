@@ -68,7 +68,6 @@ class GetPutInfoAtlan:
         return dependent_objects + "\n"
 
     def finde_table_in_atlan(self, qualifiedname):
-        #TODO добавить сортировку по времени создания
         type_name = 'AtlanTable'
         "поиск объектов по параметрам qualifiedName,classifications,meaningNames,typeName "
         data = {
