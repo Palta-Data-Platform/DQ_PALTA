@@ -24,7 +24,6 @@ def wrapped(s, width=60):
 
 # TODO использова tempfile
 # TODO Использовать шаблон для slack сообщений
-# TODO добавить отправление по emails
 # TODO продумать если несколько репозиториев с разными тестами, как выдавать общий статус по таблице
 # TODO Добавить тесты на аномалии
 
@@ -134,13 +133,13 @@ def get_sf_connection(user_sf, password_sf, account_sf, use_db='', use_schema_me
 
 def log_insert_snowflake(for_log_iter):
     sql_log = """insert into DQ_LOG_RESULT_{8} (NAME_TEST,PATH_TO_TABLE, STATUS,RESULT,START_TIME_TS,ERROR_TEXT,
-            T_CHANGE_TS,LOGIC_QUERY,COMPANY,DURATION_REQUEST) values ('{0}','{1}','{2}','{3}','{4}','{5}',
-            '{6}','{7}','{8}','{9}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
+            T_CHANGE_TS,LOGIC_QUERY,COMPANY,DURATION_REQUEST,LAUNCH_SCHEDULE) values ('{0}','{1}','{2}','{3}','{4}','{5}',
+            '{6}','{7}','{8}','{9}','{10}') """.format(for_log_iter['NAME_TEST'], for_log_iter['PATH_TO_TABLE'],
                                                 for_log_iter['STATUS'], for_log_iter['RESULT']['value'],
                                                 for_log_iter['START_TIME'], for_log_iter['ERROR_TEXT'],
                                                 for_log_iter['INSERT_DATETIME'],
                                                 for_log_iter['LOGIC_QUERY'].replace("'", "''"),
-                                                for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS']
+                                                for_log_iter['COMPANY'], for_log_iter['DURATION_TESTS'],for_log_iter['LAUNCH_SCHEDULE'],
                                                 )
 
     conction_for_meta = get_sf_connection(os.environ['SNOWFLAKE_USER_META'], os.environ['SNOWFLAKE_PASSWORD_META'],
@@ -208,6 +207,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
                         "LOGIC_QUERY": ch['definition'],
                         "COMPANY": COMPANY,
                         "DURATION_TESTS": (datetime.now() - now).total_seconds(),
+                        "LAUNCH_SCHEDULE": SCHEDULE
 
                         }
         for_log.append(
@@ -236,6 +236,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
                      "LOGIC_QUERY": ch['LOGIC_QUERY'],
                      "COMPANY": COMPANY,
                      "DURATION_TESTS": ch['DURATION_TESTS'],
+                     "LAUNCH_SCHEDULE":SCHEDULE
 
                      }
                 )
@@ -272,6 +273,7 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
                         "LOGIC_QUERY": json.dumps(log_erros),
                         "COMPANY": COMPANY,
                         "DURATION_TESTS": (datetime.now() - now).total_seconds(),
+                        "LAUNCH_SCHEDULE": SCHEDULE
 
                         }
         for_log.append(
