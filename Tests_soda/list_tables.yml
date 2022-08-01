@@ -1,5 +1,4 @@
 simple_data.dm_finance.f_subscription:
-  ALWAYS_SEND: True
   schedule: '0 5 * * *'
   custom_selects:
     All_amounts = 0:
