@@ -18,8 +18,6 @@ ALWAYS_SEND = 'False'
 EMAILS = ''
 
 
-def wrapped(s, width=60):
-    return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
 
 # TODO использова tempfile
@@ -310,17 +308,6 @@ def create_log_and_messages(result_test, now_int, now, test_passed):
         else:
             print("problems with atlan")
     # Atlan
-    html = f"""\
-        <html>
-          <body>
-            <p>Table:{path_to_table}<br>
-               How are you?<br>
-               <a href="http://www.realpython.com">Real Python</a> 
-               has many great tutorials.
-            </p>
-          </body>
-        </html>
-        """
     return text_e, for_log, count_result, link_to_atlan,text_email
 
 
@@ -345,13 +332,13 @@ def wirte_and_send_results(test_passed, text_e, for_log, count_result, link_to_a
                 len(prev_count_result) != 0 and (
                 test_passed == 1 or test_passed == 2 or test_passed == 3)):
 
-            perv_how_long_status = perv_how_long_status_local + 1
+            perv_how_long_status_local = perv_how_long_status_local + 1
             send_messeg_to_slake(text_e, hooks)
             if EMAILS != '':
                 send_email(os.environ['SEND_EMAIL'], os.environ['PASSWORD_EMAIL'], EMAILS, path_to_table, text_e)
         else:
 
-            perv_how_long_status = perv_how_long_status_local + 1
+            perv_how_long_status_local = perv_how_long_status_local + 1
             if (test_passed == 1 or test_passed == 2 or test_passed == 3) and perv_how_long_status_local % 5 == 0:
                 text_e = text_e + "*The error was repeated {0} times*".format(perv_how_long_status_local)
                 send_messeg_to_slake(text_e, hooks)
@@ -433,6 +420,8 @@ def main():
 def represent_literal(dumper, data):
     return dumper.represent_scalar(SafeLoader.DEFAULT_SCALAR_TAG,
                                    data, style="|")
+def wrapped(s, width=60):
+    return PreservedScalarString('\n'.join(textwrap.wrap(s, width=width)))
 
 
 # path_to_table
