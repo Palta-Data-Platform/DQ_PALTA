@@ -51,15 +51,18 @@ jobs:
           API_KEY_ID_SODA: ${{ secrets.API_KEY_ID_SODA }}
           API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
           CHANNEL: ${{ secrets.CHANNEL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           CHANNEL_CUSTOM:  ${{ github.event.inputs.CHANNEL }}
           COMPANY:  ${{ secrets.COMPANY }}
           EMAILS: ${{ github.event.inputs.EMAILS }}
           API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
           DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
           PATH_TO_TABLE: ${{ github.event.inputs.Path }}
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
           SCHEDULE: Manual
           ALWAYS_SEND: ${{ github.event.inputs.ALWAYS_SEND }}
+          RUN_INDENTIFIER: ${{github.event.inputs.id}}
         run: |
           python3 main.py
       - name: 'Upload Artifact'
