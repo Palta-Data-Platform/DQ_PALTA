@@ -42,7 +42,6 @@ if __name__ == "__main__":
     hooks = os.environ["CHANNEL"]
     COMPANY = os.environ['COMPANY']
     GITHUB_REF_NAME = os.environ['GITHUB_REF_NAME']
-    GIT_TOKEN = os.environ['GIT_TOKEN']
     GITHUB_REPOSITORY = os.environ["GITHUB_REPOSITORY"]
     API_KEY_ATLAN = os.environ["API_KEY_ATLAN"]
     DOMMEN_ATLAN = os.environ["DOMMEN_ATLAN"]
