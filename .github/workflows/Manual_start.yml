@@ -29,6 +29,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DQ_INSTAL }}
+          known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
       - name: ${{github.event.inputs.id}}
         run: echo run identifier ${{ inputs.id }}
       - uses: actions/checkout@v3
@@ -36,7 +41,7 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip'
-      - run: pip install -r requirements.txt
+      - run:  pip install git+ssh://git@github.com/Palta-Data-Platform/soda_tests.git
       - name: run main
         env:
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
