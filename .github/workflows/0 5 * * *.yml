@@ -30,6 +30,8 @@ jobs:
 
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+        pip install git+ssh://git@github.com/Palta-Data-Platform/soda_tests.git
+
         '
     - name: run main
       env:
