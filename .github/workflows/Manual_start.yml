@@ -52,15 +52,14 @@ jobs:
           SNOWFLAKE_PASSWORD_META: ${{ secrets.SNOWFLAKE_PASSWORD_META }}
           SNOWFLAKE_ACCOUNT_META: ${{ secrets.SNOWFLAKE_ACCOUNT_META }}
           SNOWFLAKE_WAREHOUSE_META: ${{ secrets.SNOWFLAKE_WAREHOUSE_META }}
-          SODA_CLOUD: ${{ secrets.SODA_CLOUD }}
-          API_KEY_ID_SODA: ${{ secrets.API_KEY_ID_SODA }}
-          API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
           CHANNEL: ${{ secrets.CHANNEL }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           CHANNEL_CUSTOM:  ${{ github.event.inputs.CHANNEL }}
           COMPANY:  ${{ secrets.COMPANY }}
+          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+          SEND_EMAIL: ${{ secrets.SEND_EMAIL }}
           EMAILS: ${{ github.event.inputs.EMAILS }}
           API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
           DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
