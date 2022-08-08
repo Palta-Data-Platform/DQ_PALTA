@@ -1,23 +1,19 @@
 freshness_date > 0:
       name: "Freshness_date. The data has not been updated for the last {interval}. Please take this into account when using the data."
       freshness_date query: |
-        select count(1)  from {path_to_table} where {time_colum} >= current_timestamp - INTERVAL '{interval}'
+        select count(1)  from {path_to_table} where {time_column} >= current_timestamp - INTERVAL '{interval}'
 dublicate = 0:
   name: "Dublicate. There are duplicates in the data for the last {interval} . Please take this into account when using the data"
   dublicate query: |
-    select count(1) from(select {unics_colums} ,count(1) as dupes from {path_to_table}  where {time_colum}>= current_timestamp -INTERVAL '{interval}'  group by {unics_colums} having dupes >1)
+    select count(1) from(select {unique_colums} ,count(1) as dupes from {path_to_table}  where {time_column}>= current_timestamp -INTERVAL '{interval}'  group by {unics_colums} having dupes >1)
 Errors_in_loading_history = 0:
   name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 0"
   Errors_in_loading_history query: |
     select case when sum(ERROR_COUNT) >0 then 1 else 0 end as check_test from table (paced_data.information_schema.copy_history(table_name => '{path_to_table}', start_time =>current_timestamp - INTERVAL '{interval}'))
-instals_diff_active = 0:
-    name:  "Instals_diff_active. The number of installation is greater than the number of total actions"
-    instals_diff_active query: |
-      select case when sum({comlum1})-sum({comlum2})>0 then 1 else 0 as check_test   from {path_to_table} where {time_colum} >= current_timestamp - INTERVAL '{interval}'
 Checking_for_missing_days_for_days = 0:
     name: " There are missed days.{num_days}"
     Checking_for_missing_days_for_days query: |
-      select case when (count(1)<{num_days} or median(ct)/min(ct)>=2)then 1 else 0 end as res  from (select DATE_TRUNC('day', {time_colum}) as dt,count(1) as ct from {path_to_table} where DATE_TRUNC('day', {time_colum})<CURRENT_DATE() and DATE_TRUNC('day', {time_colum})>=CURRENT_DATE()-INTERVAL '{num_days}d' group by 1)
+      select case when (count(1)<{num_days} or median(ct)/min(ct)>=2)then 1 else 0 end as res  from (select DATE_TRUNC('day', {time_column}) as dt,count(1) as ct from {path_to_table} where DATE_TRUNC('day', {time_column})<CURRENT_DATE() and DATE_TRUNC('day', {time_column})>=CURRENT_DATE()-INTERVAL '{num_days}d' group by 1)
 anomaly score for row_count < default:
     name: "anomaly score for row_count. Finded anomaly in {interval}"
-    filter: "{time_colum} >= current_timestamp - INTERVAL '{interval}'"
+    filter: "{time_column} >= current_timestamp - INTERVAL '{interval}'"
