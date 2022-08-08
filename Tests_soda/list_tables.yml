@@ -5,7 +5,7 @@ simple_data.dm_finance.f_subscription:
       name: "All amounts in original currency have been converted to USD. transactions were not converted to USD last 7 days"
       All_amounts query: "
         SELECT
-  IFF(COUNT(*) = 0, 0, 1) 
+  COUNT(*) AS res_test
 FROM simple.finance.f_subscription
 WHERE 
   DATE(TRANSACTION_TS) > DATEADD(DAY, -7, CURRENT_DATE()) AND
@@ -14,11 +14,7 @@ WHERE
     No_duplicated = 0:
       name: "No duplicated transactions last 10 days.There were {res_test} duplicated transactions in the table"
       No_duplicated query: "SELECT
-  IFF(
-    COUNT(TRANSACTION_ID) = COUNT(DISTINCT TRANSACTION_ID),
-    0,
-    1
-  )
+   COUNT(TRANSACTION_ID) - COUNT(DISTINCT TRANSACTION_ID) as res_test
 FROM simple.finance.f_subscription
 WHERE DATE(TRANSACTION_TS) > DATEADD(DAY, -10, CURRENT_DATE())"
     Data_for_all_providers_came = 0:
@@ -39,6 +35,28 @@ CROSS JOIN (
   FROM simple.finance.f_subscription
   WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -7, CURRENT_DATE())
 ) AS TOTAL"
+    Transactions_count_change < 0.5:
+      name: "Transactions count change is less than 50% comparing to previous day. There were 50% more or less transactions yesterday than the day before ({res_test} difference)"
+      Transactions_count_change query: "SELECT
+  ABS(
+      1 -
+      DIV0(
+        COUNT_TRANSACTIONS, 
+        LAG(COUNT_TRANSACTIONS, -1) OVER(ORDER BY TRANSACTION_DATE DESC)
+      )
+    ) AS res_test
+  
+FROM (
+  SELECT
+    DATE(TRANSACTION_TS) AS TRANSACTION_DATE,
+    COUNT(DISTINCT TRANSACTION_ID) AS COUNT_TRANSACTIONS
+  FROM simple.finance.f_subscription
+  WHERE 
+    DATE(TRANSACTION_TS) BETWEEN DATEADD(DAY, -2, CURRENT_DATE()) AND DATEADD(DAY, -1, CURRENT_DATE())
+  GROUP BY 1 
+  ORDER BY 1 DESC
+)
+LIMIT 1"
 simple_data.dm_dashboard.f_user_activity:
   schedule: "0 5 * * *"
   ALWAYS_SEND: 'False'
