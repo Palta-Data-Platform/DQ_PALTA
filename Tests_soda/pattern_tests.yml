@@ -5,7 +5,7 @@ freshness_date > 0:
 dublicate = 0:
   name: "Dublicate. There are duplicates in the data for the last {interval} . Please take this into account when using the data"
   dublicate query: |
-    select count(1) from(select {unique_colums} ,count(1) as dupes from {path_to_table}  where {time_column}>= current_timestamp -INTERVAL '{interval}'  group by {unics_colums} having dupes >1)
+    select count(1) from(select {unique_colums} ,count(1) as dupes from {path_to_table}  where {time_column}>= current_timestamp -INTERVAL '{interval}'  group by {unique_colums} having dupes >1)
 Errors_in_loading_history = 0:
   name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 0"
   Errors_in_loading_history query: |
