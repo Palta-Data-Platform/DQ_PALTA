@@ -1,6 +1,4 @@
-from Tests_runer import main
-
+from Tests_runer.main import StartTests
 
 if __name__ == '__main__':
-    st= main.StartTests()
-    st.main()
+    StartTests.main()
