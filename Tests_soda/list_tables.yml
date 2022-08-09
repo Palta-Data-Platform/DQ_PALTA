@@ -72,20 +72,7 @@ simple_data.dm_finance.f_transaction:
   freshness_date > 0:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
-simple_data.stg_finance.f_revenuecat_event:
-  schedule: "0 * * * *"
-  freshness_date > 0:
-    time_column: 'EVENT_TIMESTAMP'
-    interval: '60m'
-  dublicate = 0:
-    schedule: "0 */3 * * *"
-    time_column: 'EVENT_TIMESTAMP'
-    interval: '180m'
-    unique_colums: 'ID'
-  Checking_for_missing_days_for_days = 0:
-    schedule: "0 5 * * *"
-    time_column: 'EVENT_TIMESTAMP'
-    num_days: '3'
+
 simple_data.stg_finance.f_revenuecat_subscription:
   schedule: "0 */8 * * *"
   freshness_date > 0:
@@ -278,6 +265,7 @@ zing_data.wrk_stg_telemetry.idmap_user:
   schedule: "0 */4 * * *"
   Errors_in_loading_history = 0:
     interval: '24h'
+
 
 
 
