@@ -17,7 +17,6 @@ jobs:
         - simple_data.dm_finance.f_subscription
         - simple_data.dm_dashboard.f_user_activity
         - simple_data.dm_finance.f_transaction
-        - simple_data.stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_revenuecat_subscription
     steps:
     - name: Install SSH Key
