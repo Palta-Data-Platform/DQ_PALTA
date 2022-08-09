@@ -61,7 +61,7 @@ simple_data.dm_dashboard.f_user_activity:
   schedule: "0 5 * * *"
   ALWAYS_SEND: 'False'
   freshness_date > 0:
-    time_colum: 'REPORT_DT'
+    time_column: 'REPORT_DT'
     interval: '48h'
   custom_selects:
     the_number_of_installation = 0:
@@ -70,74 +70,61 @@ simple_data.dm_dashboard.f_user_activity:
 simple_data.dm_finance.f_transaction:
   schedule: "0 5 * * *"
   freshness_date > 0:
-    time_colum: 'TRANSACTION_TS'
+    time_column: 'TRANSACTION_TS'
     interval: '24h'
-simple_data.stg_finance.f_revenuecat_event:
-  schedule: "0 * * * *"
-  freshness_date > 0:
-    time_colum: 'EVENT_TIMESTAMP'
-    interval: '60m'
-  dublicate = 0:
-    schedule: "0 */3 * * *"
-    time_colum: 'EVENT_TIMESTAMP'
-    interval: '180m'
-    unics_colums: 'ID'
-  Checking_for_missing_days_for_days = 0:
-    schedule: "0 5 * * *"
-    time_colum: 'EVENT_TIMESTAMP'
-    num_days: '3'
+
 simple_data.stg_finance.f_revenuecat_subscription:
   schedule: "0 */8 * * *"
   freshness_date > 0:
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '26h'
   dublicate = 0:
     schedule: "0 5 * * *"
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '3d'
-    unics_colums: "STORE_TRANSACTION_ID,START_TIME"
+    unique_colums: "STORE_TRANSACTION_ID,START_TIME"
 paced_data.stg_telemetry.f_user_event:
     schedule: "0 0 * * *"
     freshness_date > 0:
-      time_colum: 'SERVER_UPLOAD_TIME'
+      time_column: 'SERVER_UPLOAD_TIME'
       interval: '24h'
     dublicate = 0:
       schedule: "0 */3 * * *"
-      time_colum: 'SERVER_UPLOAD_TIME'
+      time_column: 'SERVER_UPLOAD_TIME'
       interval: '72h'
-      unics_colums: 'UUID'
+      unique_colums: 'UUID'
 simple_data.stg_finance.f_source_refund:
   schedule: "0 0 * * *"
   freshness_date > 0:
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '48h'
 simple_data.stg_telemetry.d_user_profile:
   schedule: "0 0 * * *"
   freshness_date > 0:
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '28h'
 simple_data.stg_telemetry.f_amplitude_event:
   schedule: "0 0 * * *"
   freshness_date > 0:
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '24h'
   dublicate = 0:
     schedule: "0 */3 * * *"
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '72h'
-    unics_colums: 'UUID'
+    unique_colums: 'UUID'
 simple_data.stg_telemetry.f_user_event:
   schedule: "0 * * * *"
   Errors_in_loading_history = 0:
     interval: '60m'
   freshness_date > 0:
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '60m'
   dublicate = 0:
     schedule: "0 */3 * * *"
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '72h'
-    unics_colums: 'UUID'
+    unique_colums: 'UUID'
   custom_selects:
     No_Web = 0:
       name: "There is no Web in event for the last hour.Event Analytics is partially unavailable"
@@ -156,13 +143,13 @@ simple_data.stg_telemetry.f_user_event:
 simple_data.stg_telemetry.idmap_user:
   schedule: "0 0 * * *"
   freshness_date > 0:
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '26h'
   dublicate = 0:
     schedule: "0 */3 * * *"
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '72h'
-    unics_colums: "USER_ID,PALTABRAIN_ID"
+    unique_colums: "USER_ID,PALTABRAIN_ID"
 simple_data.wrk_stg_finance.f_revenuecat_event:
   schedule: "0 * * * *"
   Errors_in_loading_history = 0:
@@ -172,7 +159,7 @@ simple_data.wrk_stg_finance.f_revenuecat_subscription:
   Errors_in_loading_history = 0:
     interval: '24h'
   freshness_date > 0:
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '26h'
   custom_selects:
     app_store = 0:
@@ -188,11 +175,11 @@ weather_data.stg_telemetry.f_user_event:
     interval: '3h'
   dublicate = 0:
     schedule: "0 0 * * *"
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '72h'
-    unics_colums: "UUID"
+    unique_colums: "UUID"
   freshness_date > 0:
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '3h'
 zing_data.dm_dashboard.f_user_activity:
   schedule: "0 */8 * * *"
@@ -200,11 +187,11 @@ zing_data.dm_dashboard.f_user_activity:
     interval: '3h'
   dublicate = 0:
     schedule: "0 0 * * *"
-    time_colum: 'REPORT_DT'
+    time_column: 'REPORT_DT'
     interval: '72h'
-    unics_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
+    unique_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
   freshness_date > 0:
-    time_colum: 'REPORT_DT'
+    time_column: 'REPORT_DT'
     interval: '48h'
 zing_data.dm_finance.f_transaction:
   schedule: "0 */8 * * *"
@@ -212,50 +199,50 @@ zing_data.dm_finance.f_transaction:
     interval: '3h'
   dublicate = 0:
     schedule: "0 0 * * *"
-    time_colum: 'TRANSACTION_TS'
+    time_column: 'TRANSACTION_TS'
     interval: '72h'
-    unics_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
+    unique_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
   freshness_date > 0:
-    time_colum: 'TRANSACTION_TS'
+    time_column: 'TRANSACTION_TS'
     interval: '24h'
 zing_data.stg_finance.f_revenuecat_event:
   schedule: "0 */3 * * *"
   dublicate = 0:
     schedule: "0 0 * * *"
-    time_colum: 'EVENT_TIMESTAMP'
+    time_column: 'EVENT_TIMESTAMP'
     interval: '72h'
-    unics_colums: "ID"
+    unique_colums: "ID"
   freshness_date > 0:
-    time_colum: 'EVENT_TIMESTAMP'
+    time_column: 'EVENT_TIMESTAMP'
     interval: '180m'
 zing_data.stg_finance.f_revenuecat_subscription:
   schedule: "0 */3 * * *"
 
   dublicate = 0:
     schedule: "0 0 * * *"
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '72h'
-    unics_colums: "STORE_TRANSACTION_ID,START_TIME"
+    unique_colums: "STORE_TRANSACTION_ID,START_TIME"
   freshness_date > 0:
-    time_colum: 'T_SF_LOAD_TS'
+    time_column: 'T_SF_LOAD_TS'
     interval: '26h'
 zing_data.stg_telemetry.d_user_profile:
   schedule: "0 */3 * * *"
   freshness_date > 0:
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '26h'
 zing_data.stg_telemetry.f_user_event:
   schedule: "0 * * * *"
   Errors_in_loading_history = 0:
     interval: '60m'
   freshness_date > 0:
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '60m'
   dublicate = 0:
     schedule: "0 */3 * * *"
-    time_colum: 'SERVER_UPLOAD_TIME'
+    time_column: 'SERVER_UPLOAD_TIME'
     interval: '72h'
-    unics_colums: 'UUID'
+    unique_colums: 'UUID'
   custom_selects:
     for_missing_days_for_3_days = 0:
       schedule: "0 5 * * *"
@@ -264,7 +251,7 @@ zing_data.stg_telemetry.f_user_event:
 zing_data.stg_telemetry.idmap_user:
   schedule: "0 */4 * * *"
   freshness_date > 0:
-    time_colum: 'T_CHANGE_TS'
+    time_column: 'T_CHANGE_TS'
     interval: '26h'
 zing_data.wrk_stg_finance.f_revenuecat_event:
   schedule: "0 * * * *"
@@ -278,6 +265,7 @@ zing_data.wrk_stg_telemetry.idmap_user:
   schedule: "0 */4 * * *"
   Errors_in_loading_history = 0:
     interval: '24h'
+
 
 
 
