@@ -23,6 +23,7 @@ jobs:
         - zing_data.stg_finance.f_revenuecat_subscription
         - zing_data.stg_telemetry.d_user_profile
         - zing_data.stg_telemetry.f_user_event
+        - simple_data.stg_finance.f_revenuecat_event
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
