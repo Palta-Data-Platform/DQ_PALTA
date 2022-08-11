@@ -1,0 +1,144 @@
+zing_data.wrk_stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
+  Errors_in_loading_history = 0:
+    interval: '60m'
+simple_data.stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
+  freshness_date > 0:
+    time_column: 'EVENT_TIMESTAMP'
+    interval: '60m'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_column: 'EVENT_TIMESTAMP'
+    interval: '180m'
+    unique_colums: 'ID'
+  Checking_for_missing_days_for_days = 0:
+    schedule: "0 5 * * *"
+    time_column: 'EVENT_TIMESTAMP'
+    num_days: '3'
+zing_data.stg_finance.f_revenuecat_subscription:
+  schedule: "0 */3 * * *"
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_column: 'T_SF_LOAD_TS'
+    interval: '72h'
+    unique_colums: "STORE_TRANSACTION_ID,START_TIME"
+  freshness_date > 0:
+    time_column: 'T_SF_LOAD_TS'
+    interval: '26h'
+zing_data.stg_finance.f_revenuecat_event:
+  schedule: "0 */3 * * *"
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_column: 'EVENT_TIMESTAMP'
+    interval: '72h'
+    unique_colums: "ID"
+  freshness_date > 0:
+    time_column: 'EVENT_TIMESTAMP'
+    interval: '180m'
+zing_data.dm_finance.f_transaction:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_column: 'TRANSACTION_TS'
+    interval: '72h'
+    unique_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
+  freshness_date > 0:
+    time_column: 'TRANSACTION_TS'
+    interval: '24h'
+simple_data.wrk_stg_finance.f_revenuecat_subscription:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '24h'
+  freshness_date > 0:
+    time_column: 'T_SF_LOAD_TS'
+    interval: '26h'
+  custom_selects:
+    app_store = 0:
+      name: "There is no app_store in subscriptions for the last 26 hours.Payment Analytics is partially unavailable"
+      app_store query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.wrk_stg_finance.f_revenuecat_subscription where T_SF_LOAD_TS>current_timestamp -INTERVAL '26h' and STORE='app_store' LIMIT 50"
+simple_data.wrk_stg_finance.f_revenuecat_event:
+  schedule: "0 * * * *"
+  Errors_in_loading_history = 0:
+    interval: '60m'
+simple_data.stg_finance.f_source_refund:
+  schedule: "0 0 * * *"
+  freshness_date > 0:
+    time_column: 'T_SF_LOAD_TS'
+    interval: '48h'
+simple_data.stg_finance.f_revenuecat_subscription:
+  schedule: "0 */8 * * *"
+  freshness_date > 0:
+    time_column: 'T_SF_LOAD_TS'
+    interval: '26h'
+  dublicate = 0:
+    schedule: "0 5 * * *"
+    time_column: 'T_SF_LOAD_TS'
+    interval: '3d'
+    unique_colums: "STORE_TRANSACTION_ID,START_TIME"
+simple_data.dm_finance.f_transaction:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'TRANSACTION_TS'
+    interval: '24h'
+simple_data.dm_finance.f_subscription:
+  schedule: '0 5 * * *'
+  custom_selects:
+    All_amounts = 0:
+      name: "All amounts in original currency have been converted to USD. transactions were not converted to USD last 7 days"
+      All_amounts query: "
+        SELECT
+  COUNT(*) AS res_test
+FROM simple.finance.f_subscription
+WHERE 
+  DATE(TRANSACTION_TS) > DATEADD(DAY, -7, CURRENT_DATE()) AND
+  AMOUNT_USD = 0 AND
+  ROUND(AMOUNT_PAID, 0) != 0"
+    No_duplicated = 0:
+      name: "No duplicated transactions last 10 days.There were {res_test} duplicated transactions in the table"
+      No_duplicated query: "SELECT
+   COUNT(TRANSACTION_ID) - COUNT(DISTINCT TRANSACTION_ID) as res_test
+FROM simple.finance.f_subscription
+WHERE DATE(TRANSACTION_TS) > DATEADD(DAY, -10, CURRENT_DATE())"
+    Data_for_all_providers_came = 0:
+      name: "Data for all providers came yesterday. Not all providers has come (only {res_test} providers, expected more)"
+      Data_for_all_providers_came query: "SELECT
+  IFF(
+    YESTERDAY.COUNT_PROVIDERS < TOTAL.COUNT_PROVIDERS,
+    1,
+    0
+  ) AS IS_PASSED
+FROM (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM simple.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -1, CURRENT_DATE())
+) AS YESTERDAY
+CROSS JOIN (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM simple.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -7, CURRENT_DATE())
+) AS TOTAL"
+    Transactions_count_change < 0.5:
+      name: "Transactions count change is less than 50% comparing to previous day. There were 50% more or less transactions yesterday than the day before ({res_test} difference)"
+      Transactions_count_change query: "SELECT
+  ABS(
+      1 -
+      DIV0(
+        COUNT_TRANSACTIONS, 
+        LAG(COUNT_TRANSACTIONS, -1) OVER(ORDER BY TRANSACTION_DATE DESC)
+      )
+    ) AS res_test
+  
+FROM (
+  SELECT
+    DATE(TRANSACTION_TS) AS TRANSACTION_DATE,
+    COUNT(DISTINCT TRANSACTION_ID) AS COUNT_TRANSACTIONS
+  FROM simple.finance.f_subscription
+  WHERE 
+    DATE(TRANSACTION_TS) BETWEEN DATEADD(DAY, -2, CURRENT_DATE()) AND DATEADD(DAY, -1, CURRENT_DATE())
+  GROUP BY 1 
+  ORDER BY 1 DESC
+)
+LIMIT 1"
