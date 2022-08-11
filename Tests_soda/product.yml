@@ -1,0 +1,23 @@
+zing_data.dm_dashboard.f_user_activity:
+  schedule: "0 */8 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    schedule: "0 0 * * *"
+    time_column: 'REPORT_DT'
+    interval: '72h'
+    unique_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '48h'
+simple_data.dm_dashboard.f_user_activity:
+  schedule: "0 5 * * *"
+  ALWAYS_SEND: 'False'
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '48h'
+  custom_selects:
+    the_number_of_installation = 0:
+      name: "The number of installation is greater than the number of total actions. Need to check the data.diff={res_test:.2f}%.."
+      the_number_of_installation query: "select case when sum(ACTIVE_USERS)<sum(INSTALLS) then 1 else 0 end as res   from simple_data.dm_dashboard.f_user_activity where REPORT_DT >= current_timestamp - INTERVAL '72h'"
+
