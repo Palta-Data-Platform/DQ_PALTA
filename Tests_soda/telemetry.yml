@@ -85,7 +85,7 @@ simple_data.stg_telemetry.f_user_event:
     No_IOS= 0:
       schedule: "0 5 * * *"
       name: "There is no iOS in event for the last hour.Event Analytics is partially unavailable"
-      No_Android query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='iOS'  LIMIT 50\n"
+      No_IOS query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='iOS'  LIMIT 50\n"
 simple_data.stg_telemetry.f_amplitude_event:
   schedule: "0 0 * * *"
   freshness_date > 0:
