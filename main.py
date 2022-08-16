@@ -1,4 +1,4 @@
-from Tests_runer.main import StartTests
+from tests_runer.main import StartTests
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     StartTests.main()
