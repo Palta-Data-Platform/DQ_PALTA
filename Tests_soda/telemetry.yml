@@ -42,9 +42,9 @@ weather_data.stg_telemetry.f_user_event:
     time_column: 'SERVER_UPLOAD_TIME'
     interval: '72h'
     unique_colums: "UUID"
-  freshness_date > 0:
-    time_column: 'SERVER_UPLOAD_TIME'
-    interval: '3h'
+#  freshness_date > 0:
+#    time_column: 'SERVER_UPLOAD_TIME'
+#    interval: '3h'
 simple_data.wrk_stg_telemetry.idmap_user:
   schedule: "0 */8 * * *"
   Errors_in_loading_history = 0:

@@ -1,9 +1,8 @@
 zing_data.dm_dashboard.f_user_activity:
-  schedule: "0 */8 * * *"
+  schedule: "0 0 * * *"
   Errors_in_loading_history = 0:
     interval: '3h'
   dublicate = 0:
-    schedule: "0 0 * * *"
     time_column: 'REPORT_DT'
     interval: '72h'
     unique_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
