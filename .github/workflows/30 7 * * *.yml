@@ -1,0 +1,68 @@
+name: 30 7 * * *
+on:
+  schedule:
+  - cron: 30 7 * * *
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: Log level
+        required: true
+        default: warning
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        table_path:
+        - simple_data.stg_telemetry.f_user_property_backend
+    steps:
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.DQ_INSTAL }}
+        known_hosts: just-a-placeholder-so-we-dont-get-errors
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: 'python -m pip install --upgrade pip
+
+        pip install git+ssh://git@github.com/Palta-Data-Platform/soda_tests.git
+
+        '
+    - name: run main
+      env:
+        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        SNOWFLAKE_USER_META: ${{ secrets.SNOWFLAKE_USER_META }}
+        SNOWFLAKE_PASSWORD_META: ${{ secrets.SNOWFLAKE_PASSWORD_META }}
+        SNOWFLAKE_ACCOUNT_META: ${{ secrets.SNOWFLAKE_ACCOUNT_META }}
+        SNOWFLAKE_WAREHOUSE_META: ${{ secrets.SNOWFLAKE_WAREHOUSE_META }}
+        PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+        SEND_EMAIL: ${{ secrets.SEND_EMAIL }}
+        CHANNEL: ${{ secrets.CHANNEL }}
+        COMPANY: ${{ secrets.COMPANY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        API_KEY_ATLAN: ${{ secrets.API_KEY_ATLAN }}
+        DOMMEN_ATLAN: ${{ secrets.DOMMEN_ATLAN }}
+        API_KEY_ID_SODA: ${{ secrets.API_KEY_ID_SODA }}
+        API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
+        PATH_TO_TABLE: ${{ matrix.table_path }}
+        SCHEDULE: 30 7 * * *
+        ALWAYS_SEND: 'False'
+      run: 'python3 main.py
+
+        '
+    - name: Upload Artifact
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.table_path }}
+        retention-days: '10'
+        path: temp/*
