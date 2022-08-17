@@ -142,3 +142,24 @@ FROM (
   ORDER BY 1 DESC
 )
 LIMIT 1"
+simple_data.stg_finance.d_stripe_price_archive:
+  schedule: "0 4 * * *"
+  freshness_date > 0:
+    time_column: 't_change_ts'
+    interval: '26h'
+  dublicate = 0:
+    schedule: "0 4 * * *"
+    time_column: 't_change_ts'
+    interval: '3d'
+    unique_colums: "ID"
+simple_data.dm_finance.stripe__subscription_line_items:
+  schedule: "0 4 * * *"
+  freshness_date > 0:
+    time_column: 'INVOICE_CREATED_AT'
+    interval: '24h'
+  dublicate = 0:
+    schedule: "0 4 * * *"
+    time_column: 'INVOICE_CREATED_AT'
+    interval: '3d'
+    unique_colums: "INVOICE_ID,INVOICE_LINE_ITEM_ID "
+

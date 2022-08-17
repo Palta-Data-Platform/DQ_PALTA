@@ -111,7 +111,15 @@ paced_data.stg_telemetry.f_user_event:
       time_column: 'SERVER_UPLOAD_TIME'
       interval: '72h'
       unique_colums: 'UUID'
-
+simple_data.stg_telemetry.f_user_property_backend:
+  schedule: "30 7 * * *"
+  freshness_date > 0:
+    time_column: 'CREATED_AT'
+    interval: '24h'
+  dublicate = 0:
+    time_column: 'CREATED_AT'
+    interval: '72h'
+    unique_colums: 'ID'
 
 
 
