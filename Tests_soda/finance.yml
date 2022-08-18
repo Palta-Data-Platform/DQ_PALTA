@@ -143,12 +143,11 @@ FROM (
 )
 LIMIT 1"
 simple_data.stg_finance.d_stripe_price_archive:
-  schedule: "0 4 * * *"
+  schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 't_change_ts'
     interval: '26h'
   dublicate = 0:
-    schedule: "0 4 * * *"
     time_column: 't_change_ts'
     interval: '3d'
     unique_colums: "ID"
@@ -158,8 +157,57 @@ simple_data.dm_finance.stripe__subscription_line_items:
     time_column: 'INVOICE_CREATED_AT'
     interval: '24h'
   dublicate = 0:
-    schedule: "0 4 * * *"
     time_column: 'INVOICE_CREATED_AT'
     interval: '3d'
     unique_colums: "INVOICE_ID,INVOICE_LINE_ITEM_ID "
+simple_data.dm_finance.stripe__subscription_details:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'START_DATE'
+    interval: '24h'
+  dublicate = 0:
+    schedule: "0 4 * * *"
+    time_column: 'START_DATE'
+    interval: '3d'
+    unique_colums: "SUBSCRIPTION_ID"
+simple_data.dm_finance.stripe__balance_transactions:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'CREATED_AT'
+    interval: '24h'
+  dublicate = 0:
+    time_column: 'CREATED_AT'
+    interval: '3d'
+    unique_colums: "BALANCE_TRANSACTION_ID"
+simple_data.dm_finance.stripe__daily_overview:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'DATE'
+    interval: '24h'
+  dublicate = 0:
+    time_column: 'DATE'
+    interval: '3d'
+    unique_colums: "DATE"
+simple_data.dm_finance.stripe__quarterly_overview:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'QUARTER'
+    interval: '3month'
+  dublicate = 0:
+    time_column: 'QUARTER'
+    interval: '12month'
+    unique_colums: "QUARTER"
+simple_data.dm_finance.stripe__monthly_overview:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'MONTH'
+    interval: '1month'
+  dublicate = 0:
+    time_column: 'MONTH'
+    interval: '12month'
+    unique_colums: "QUARTER"
+
+
+
+
 
