@@ -24,7 +24,17 @@ jobs:
         - simple_data.dm_finance.stripe__daily_overview
         - simple_data.dm_finance.stripe__quarterly_overview
         - simple_data.dm_finance.stripe__monthly_overview
+        - simple_data.dm_finance.stripe__customer_overview
+        - simple_data.dm_finance.stripe__invoice_line_items
+        - simple_data.dm_finance.stripe__weekly_overview
+        - simple_data.dm_finance.d_product
+        - simple_data.dm_dashboard.f_conversion_mobile
+        - simple_data.dm_dashboard.f_retention_rate
+        - simple_data.dm_dashboard.f_conversion_web
+        - simple_data.dm_dashboard.f_conversion_from_open_to_subscription
         - simple_data.dm_dashboard.f_user_activity
+        - simple_data.dm_dashboard.f_product_ltv
+        - simple_data.dm_marketing.f_ad_spend
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
