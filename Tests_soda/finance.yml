@@ -205,7 +205,7 @@ simple_data.dm_finance.stripe__monthly_overview:
   dublicate = 0:
     time_column: 'MONTH'
     interval: '12month'
-    unique_colums: "QUARTER"
+    unique_colums: "MONTH"
 
 
 
