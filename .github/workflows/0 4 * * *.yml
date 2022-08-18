@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.stg_finance.d_stripe_price_archive
         - simple_data.dm_finance.stripe__subscription_line_items
+        - simple_data.dm_finance.stripe__subscription_details
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
