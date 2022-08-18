@@ -206,7 +206,42 @@ simple_data.dm_finance.stripe__monthly_overview:
     time_column: 'MONTH'
     interval: '12month'
     unique_colums: "MONTH"
-
+simple_data.dm_finance.stripe__customer_overview:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'CUSTOMER_CREATED_AT'
+    interval: '1d'
+  dublicate = 0:
+    time_column: 'CUSTOMER_CREATED_AT'
+    interval: '3d'
+    unique_colums: "CUSTOMER_DESCRIPTION"
+simple_data.dm_finance.stripe__invoice_line_items:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'INVOICE_CREATED_AT'
+    interval: '1d'
+  dublicate = 0:
+    time_column: 'INVOICE_CREATED_AT'
+    interval: '3d'
+    unique_colums: "INVOICE_ID,INVOICE_LINE_ITEM_ID"
+simple_data.dm_finance.stripe__weekly_overview:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'WEEK'
+    interval: '7d'
+  dublicate = 0:
+    time_column: 'WEEK'
+    interval: '28d'
+    unique_colums: "WEEK"
+simple_data.dm_finance.d_product:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'T_CHANGE_TS'
+    interval: '1d'
+  dublicate = 0:
+    time_column: 'T_CHANGE_TS'
+    interval: '3d'
+    unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
 
 
 

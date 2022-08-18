@@ -1,0 +1,21 @@
+simple_data.dm_dashboard.f_conversion_mobile:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'OPEN_DATE'
+    interval: '1 month'
+simple_data.dm_dashboard.f_retention_rate:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '1 month'
+simple_data.dm_dashboard.f_conversion_web:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '1 month'
+simple_data.dm_dashboard.f_conversion_from_open_to_subscription:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'OPEN_DATE'
+    interval: '1 month'
+
