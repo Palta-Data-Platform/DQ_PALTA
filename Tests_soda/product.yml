@@ -19,4 +19,11 @@ simple_data.dm_dashboard.f_user_activity:
     the_number_of_installation = 0:
       name: "The number of installation is greater than the number of total actions. Need to check the data.diff={res_test:.2f}%.."
       the_number_of_installation query: "select case when sum(ACTIVE_USERS)<sum(INSTALLS) then 1 else 0 end as res   from simple_data.dm_dashboard.f_user_activity where REPORT_DT >= current_timestamp - INTERVAL '72h'"
+simple_data.dm_dashboard.f_product_ltv:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'date'
+    interval: '1 month'
+
+
 

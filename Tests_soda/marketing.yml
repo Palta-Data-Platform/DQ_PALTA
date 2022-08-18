@@ -1,0 +1,5 @@
+simple_data.dm_marketing.f_ad_spend:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'REPORT_DATE'
+    interval: '1 month'
