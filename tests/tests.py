@@ -5,15 +5,15 @@ from yaml.loader import SafeLoader
 
 
 def test_yml_pattern_tests():
-    if os.path.exists("Tests_soda/pattern_tests.yml"):
-        with open("Tests_soda/pattern_tests.yml") as f:
+    if os.path.exists("tests_soda/pattern_tests.yml"):
+        with open("tests_soda/pattern_tests.yml") as f:
             get_params = yaml.load(f, Loader=SafeLoader)
 
 def _extract_yaml(path):
     with open(path) as f:
         return yaml.load(f, Loader=SafeLoader)
 def test_yml_list_tables():
-    path = "Tests_soda/"
+    path = "tests_soda/"
     agr_yml_json = {}
     for file_n in os.listdir(path):
         if file_n == 'pattern_tests.yml':
