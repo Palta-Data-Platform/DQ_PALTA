@@ -34,7 +34,7 @@ palta_data.dm_dashboard.f_user_activity:
     interval: '72h'
     unique_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
   freshness_date > 0:
-    time_column: 'REPORT_DT'
+    time_column: 'T_CHANGE_TS'
     interval: '48h'
 
 

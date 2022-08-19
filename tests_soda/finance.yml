@@ -242,16 +242,6 @@ simple_data.dm_finance.d_product:
     time_column: 'T_CHANGE_TS'
     interval: '3d'
     unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
-zing_data.dm_finance.d_product:
-  channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
-  freshness_date > 0:
-    time_column: 'T_CHANGE_TS'
-    interval: '1d'
-  dublicate = 0:
-    time_column: 'T_CHANGE_TS'
-    interval: '3d'
-    unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
 zing_data.dm_finance.f_subscription:
   channel_slack: 'TEST_CHANNEL'
   schedule: '0 5 * * *'
