@@ -1,7 +1,7 @@
-name: 0 */8 * * *
+name: 30 7 * * *
 on:
   schedule:
-  - cron: 0 */8 * * *
+  - cron: 30 7 * * *
   workflow_dispatch:
     inputs:
       logLevel:
@@ -14,10 +14,7 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - zing_data.dm_finance.f_transaction
-        - simple_data.wrk_stg_finance.f_revenuecat_subscription
-        - simple_data.stg_finance.f_revenuecat_subscription
-        - simple_data.wrk_stg_telemetry.idmap_user
+        - simple_data.stg_telemetry.f_user_property_backend
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
@@ -57,7 +54,7 @@ jobs:
         API_KEY_ID_SODA: ${{ secrets.API_KEY_ID_SODA }}
         API_KEY_SECRET_SODA: ${{ secrets.API_KEY_SECRET_SODA }}
         PATH_TO_TABLE: ${{ matrix.table_path }}
-        SCHEDULE: 0 */8 * * *
+        SCHEDULE: 30 7 * * *
         ALWAYS_SEND: 'False'
       run: 'python3 main.py
 
