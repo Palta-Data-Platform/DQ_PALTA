@@ -66,6 +66,7 @@ jobs:
         PATH_TO_TABLE: ${{ matrix.table_path }}
         SCHEDULE: 0 */3 * * *
         ALWAYS_SEND: 'False'
+        TEST_CHANNEL: ${{ secrets.TEST_CHANNEL }}
       run: 'python3 main.py
 
         '
