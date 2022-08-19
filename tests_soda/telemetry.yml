@@ -120,7 +120,17 @@ simple_data.stg_telemetry.f_user_property_backend:
     time_column: 'CREATED_AT'
     interval: '72h'
     unique_colums: 'ID'
-
+zing_data.stg_telemetry.f_amplitude_event:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 0 * * *"
+  freshness_date > 0:
+    time_column: 'T_CHANGE_TS'
+    interval: '24h'
+  dublicate = 0:
+    schedule: "0 */3 * * *"
+    time_column: 'T_CHANGE_TS'
+    interval: '72h'
+    unique_colums: 'UUID'
 
 
 

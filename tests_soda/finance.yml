@@ -242,7 +242,76 @@ simple_data.dm_finance.d_product:
     time_column: 'T_CHANGE_TS'
     interval: '3d'
     unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
-
+zing_data.dm_finance.d_product:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'T_CHANGE_TS'
+    interval: '1d'
+  dublicate = 0:
+    time_column: 'T_CHANGE_TS'
+    interval: '3d'
+    unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
+zing_data.dm_finance.f_subscription:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: '0 5 * * *'
+  custom_selects:
+    All_amounts = 0:
+      name: "All amounts in original currency have been converted to USD. transactions were not converted to USD last 7 days"
+      All_amounts query: "
+        SELECT
+  COUNT(*) AS res_test
+FROM zing.finance.f_subscription
+WHERE 
+  DATE(TRANSACTION_TS) > DATEADD(DAY, -7, CURRENT_DATE()) AND
+  AMOUNT_USD = 0 AND
+  ROUND(AMOUNT_PAID, 0) != 0"
+    No_duplicated = 0:
+      name: "No duplicated transactions last 10 days.There were {res_test} duplicated transactions in the table"
+      No_duplicated query: "SELECT
+   COUNT(TRANSACTION_ID) - COUNT(DISTINCT TRANSACTION_ID) as res_test
+FROM zing.finance.f_subscription
+WHERE DATE(TRANSACTION_TS) > DATEADD(DAY, -10, CURRENT_DATE())"
+    Data_for_all_providers_came = 0:
+      name: "Data for all providers came yesterday. Not all providers has come (only {res_test} providers, expected more)"
+      Data_for_all_providers_came query: "SELECT
+  IFF(
+    YESTERDAY.COUNT_PROVIDERS < TOTAL.COUNT_PROVIDERS,
+    1,
+    0
+  ) AS IS_PASSED
+FROM (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM zing.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -1, CURRENT_DATE())
+) AS YESTERDAY
+CROSS JOIN (
+  SELECT COUNT(DISTINCT PROVIDER_NAME) AS COUNT_PROVIDERS
+  FROM zing.finance.f_subscription
+  WHERE DATE(TRANSACTION_TS) = DATEADD(DAY, -7, CURRENT_DATE())
+) AS TOTAL"
+    Transactions_count_change < 0.5:
+      name: "Transactions count change is less than 50% comparing to previous day. There were 50% more or less transactions yesterday than the day before ({res_test} difference)"
+      Transactions_count_change query: "SELECT
+  ABS(
+      1 -
+      DIV0(
+        COUNT_TRANSACTIONS, 
+        LAG(COUNT_TRANSACTIONS, -1) OVER(ORDER BY TRANSACTION_DATE DESC)
+      )
+    ) AS res_test
+  
+FROM (
+  SELECT
+    DATE(TRANSACTION_TS) AS TRANSACTION_DATE,
+    COUNT(DISTINCT TRANSACTION_ID) AS COUNT_TRANSACTIONS
+  FROM zing.finance.f_subscription
+  WHERE 
+    DATE(TRANSACTION_TS) BETWEEN DATEADD(DAY, -2, CURRENT_DATE()) AND DATEADD(DAY, -1, CURRENT_DATE())
+  GROUP BY 1 
+  ORDER BY 1 DESC
+)
+LIMIT 1"
 
 
 

@@ -24,6 +24,17 @@ simple_data.dm_dashboard.f_product_ltv:
   freshness_date > 0:
     time_column: 'date'
     interval: '1 month'
-
+palta_data.dm_dashboard.f_user_activity:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 0 * * *"
+  Errors_in_loading_history = 0:
+    interval: '3h'
+  dublicate = 0:
+    time_column: 'REPORT_DT'
+    interval: '72h'
+    unique_colums: "PERIOD,REPORT_DT,PLATFORM,COUNTRY,FIRST_EVENT_DT"
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '48h'
 
 
