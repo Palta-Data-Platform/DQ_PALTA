@@ -17,9 +17,6 @@ jobs:
         - zing_data.stg_finance.f_revenuecat_subscription
         - zing_data.stg_finance.f_revenuecat_event
         - zing_data.dm_finance.f_transaction
-        - simple_data.stg_finance.f_source_refund
-        - zing_data.dm_dashboard.f_user_activity
-        - palta_data.dm_dashboard.f_user_activity
         - weather_data.stg_telemetry.f_user_event
         - simple_data.stg_telemetry.idmap_user
         - simple_data.stg_telemetry.f_amplitude_event
