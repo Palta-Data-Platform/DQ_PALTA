@@ -65,25 +65,25 @@ palta_data.dm_dashboard.f_revenue_and_subscription:
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'REPORT_DT'
-    interval: '2d'
+    interval: '2 month'
 palta_data.dm_dashboard.f_conversion_mobile:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
-    interval: '1month'
+    interval: '2month'
 palta_data.dm_dashboard.f_product_ltv:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'date'
-    interval: '1 month'
+    interval: '2 month'
 palta_data.dm_dashboard.f_conversion_from_open_to_subscription:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
-    interval: '1month'
+    interval: '2month'
 palta_data.dm_dashboard.f_retention_rate:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 5 * * *"
