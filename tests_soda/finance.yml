@@ -64,7 +64,7 @@ simple_data.wrk_stg_finance.f_revenuecat_event:
   Errors_in_loading_history = 0:
     interval: '60m'
 simple_data.stg_finance.f_source_refund:
-  schedule: "0 0 * * *"
+  schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'T_SF_LOAD_TS'
     interval: '48h'

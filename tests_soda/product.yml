@@ -1,5 +1,5 @@
 zing_data.dm_dashboard.f_user_activity:
-  schedule: "0 0 * * *"
+  schedule: "0 5 * * *"
   Errors_in_loading_history = 0:
     interval: '3h'
   dublicate = 0:
@@ -26,7 +26,7 @@ simple_data.dm_dashboard.f_product_ltv:
     interval: '1 month'
 palta_data.dm_dashboard.f_user_activity:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 0 * * *"
+  schedule: "0 5 * * *"
   Errors_in_loading_history = 0:
     interval: '3h'
   dublicate = 0:
