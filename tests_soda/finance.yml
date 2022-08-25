@@ -44,7 +44,7 @@ zing_data.dm_finance.f_transaction:
     schedule: "0 0 * * *"
     time_column: 'TRANSACTION_TS'
     interval: '72h'
-    unique_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
+    unique_colums: "TRANSACTION_ID,TRANSACTION_TYPE,PALTABRAIN_ID"
   freshness_date > 0:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
