@@ -4,7 +4,7 @@ SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY:
   custom_selects:
     overestimation_daily_wh = 0:
       name: "Abnormal number of credits spent for the previous day by systems. The search query can be found in the log"
-      overestimation_daily query: "
+      overestimation_daily_wh query: "
        with sum_around as (select case
                                when SPLIT(WMH.WAREHOUSE_NAME, '_')[1] in
                                     ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'APP', 'AMPLITUDE', 'ATLAN')
