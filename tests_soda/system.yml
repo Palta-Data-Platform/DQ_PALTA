@@ -1,0 +1,44 @@
+SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: '0 5 * * *'
+  custom_selects:
+    overestimation_daily_wh = 0:
+      name: "Abnormal number of credits spent for the previous day by systems. The search query can be found in the log"
+      overestimation_daily query: "
+       with sum_around as (select case
+                               when SPLIT(WMH.WAREHOUSE_NAME, '_')[1] in
+                                    ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'APP', 'AMPLITUDE', 'ATLAN')
+                                   then SPLIT(WMH.WAREHOUSE_NAME, '_')[1]
+                               else WMH.WAREHOUSE_NAME end                            as SYSTEM_NAME
+                         , (TO_CHAR(DATE_TRUNC('day', WMH.START_TIME), 'YYYY-MM-dd')) as date_cred
+                         , sum(WMH.CREDITS_USED)                                      as CREDITS_USED_GR
+                    from SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY WMH
+                    where SPLIT(WAREHOUSE_NAME, '_')[1] in
+                          ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'ATLAN', 'APP', 'AMPLITUDE', 'SERVICES')
+                      and (WMH.START_TIME) >=
+                          ((DATEADD('day', -28, DATE_TRUNC('day', CURRENT_DATE()))))
+                      and (WMH.START_TIME) < DATE_TRUNC('day', CURRENT_DATE())
+                    group by 1, 2),
+     avg_around as (select SYSTEM_NAME, avg(CREDITS_USED_GR) as avg_cr, count(1) as count_d
+                    from sum_around a
+                    where a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))
+
+                    group by 1),
+     sr_qr as (select a.SYSTEM_NAME,
+                      sum(power(a.CREDITS_USED_GR - b.avg_cr, 2)) as sr,
+                      count(1)                                    as count_day,
+                      SQRT(sr / (count_day - 1))                  as sr_qr_c
+               from sum_around a
+                        join avg_around b on a.SYSTEM_NAME = b.SYSTEM_NAME
+               where a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))
+               group by a.SYSTEM_NAME)
+select COUNT(*) AS res_test from (
+select a.SYSTEM_NAME, a.CREDITS_USED_GR, b.avg_cr, c.sr_qr_c, c.count_day
+from sum_around a
+         join avg_around b on a.SYSTEM_NAME = b.SYSTEM_NAME
+         join sr_qr c on a.SYSTEM_NAME = c.SYSTEM_NAME
+where date_cred >= ((DATEADD('day'
+    , -1
+    , DATE_TRUNC('day'
+                                 , CURRENT_DATE()))))
+  and a.CREDITS_USED_GR > (avg_cr + (sr_qr_c * 2)))"
