@@ -30,6 +30,7 @@ jobs:
         - simple_data.dm_finance.stripe__weekly_overview
         - simple_data.dm_finance.d_product
         - zing_data.dm_finance.f_subscription
+        - SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
         - simple_data.dm_dashboard.f_conversion_mobile
         - simple_data.dm_dashboard.f_retention_rate
         - simple_data.dm_dashboard.f_conversion_web
