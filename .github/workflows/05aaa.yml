@@ -14,6 +14,12 @@ jobs:
     strategy:
       matrix:
         table_path:
+        - simple_data.dm_marketing.f_ad_spend
+        - zing_data.dm_marketing.f_ad_spend
+        - zing_data.dm_dashboard.f_user_activity
+        - simple_data.dm_dashboard.f_user_activity
+        - simple_data.dm_dashboard.f_product_ltv
+        - palta_data.dm_dashboard.f_user_activity
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_source_refund
         - simple_data.stg_finance.f_revenuecat_subscription
@@ -47,12 +53,6 @@ jobs:
         - palta_data.dm_dashboard.f_product_ltv
         - palta_data.dm_dashboard.f_conversion_from_open_to_subscription
         - palta_data.dm_dashboard.f_retention_rate
-        - zing_data.dm_dashboard.f_user_activity
-        - simple_data.dm_dashboard.f_user_activity
-        - simple_data.dm_dashboard.f_product_ltv
-        - palta_data.dm_dashboard.f_user_activity
-        - simple_data.dm_marketing.f_ad_spend
-        - zing_data.dm_marketing.f_ad_spend
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
