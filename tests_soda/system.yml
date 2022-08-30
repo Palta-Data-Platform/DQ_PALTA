@@ -211,7 +211,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
     outliers_credits_name_month = 0:
       schedule: "0 5 1 * *"
       name: "Outliers in credits on warehouse name for Warehouses by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>"
-      outliers_credits_name_month: "
+      outliers_credits_name_month query: "
               WITH sum_around AS (SELECT wmh.warehouse_name                                           AS system_name
                          , (TO_CHAR(DATE_TRUNC('month', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
                          , SUM(wmh.credits_used)                                        AS credits_used_gr
