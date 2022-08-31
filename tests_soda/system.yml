@@ -642,7 +642,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
                    , DATE_TRUNC('day'
                                                  , CURRENT_DATE()))))
                  AND count_day >= 3
-                 AND a.credits_used > (avg_cr + (sr_qr_c * 2)))"
+                 AND a.credits_used - (avg_cr + (sr_qr_c * 2))) > 1 "
     outliers_snowpipe_week = 0:
       schedule: "0 5 * * MON"
       name: "Outliers in total credit from snowpipe by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>"
