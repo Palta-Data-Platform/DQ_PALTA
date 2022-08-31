@@ -615,34 +615,34 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
       name: "Outliers in total credit from snowpipe by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>"
       outliers_snowpipe_day query:
         "
-         WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('day', puh.start_time), 'YYYY-MM-dd')) AS start_time
-                                  , SUM(puh.credits_used)                                      AS credits_used
-                                  , SUM((puh.credits_used)) * 1.88                             AS dollars_used
-                             FROM snowflake.account_usage.pipe_usage_history puh
-                             WHERE (puh.start_time) >=
-                                   ((DATEADD('day', -9, DATE_TRUNC('day', CURRENT_DATE()))))
-                               AND (puh.start_time) < DATE_TRUNC('day', CURRENT_DATE())
-                             GROUP BY 1),
-              avg_around AS (SELECT AVG(credits_used) AS avg_cr, COUNT(1) AS count_d
-                             FROM sum_around a
-                             WHERE a.start_time < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))),
-              sr_qr AS (SELECT SUM(POWER(a.credits_used - b.avg_cr, 2))                           AS sr,
-                               COUNT(1)                                                           AS count_day,
-                               CASE WHEN count_day < 3 THEN 0 ELSE SQRT(sr / (count_day - 1)) END AS sr_qr_c
-                        FROM sum_around a
-                                 JOIN avg_around b
-                        WHERE a.start_time < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE())))))
-         SELECT COUNT(*) AS res_test
-         FROM (SELECT a.credits_used, b.avg_cr, c.sr_qr_c, c.count_day
-               FROM sum_around a
-                        JOIN avg_around b
-                        JOIN sr_qr c
-               WHERE start_time >= ((DATEADD('day'
-                   , -1
-                   , DATE_TRUNC('day'
-                                                 , CURRENT_DATE()))))
-                 AND count_day >= 3
-                 AND a.credits_used - (avg_cr + (sr_qr_c * 2))) > 1 "
+        WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('day', puh.start_time), 'YYYY-MM-dd')) AS start_time
+                                         , SUM(puh.credits_used)                                      AS credits_used
+                                         , SUM((puh.credits_used)) * 1.88                             AS dollars_used
+                                    FROM snowflake.account_usage.pipe_usage_history puh
+                                    WHERE (puh.start_time) >=
+                                          ((DATEADD('day', -9, DATE_TRUNC('day', CURRENT_DATE()))))
+                                      AND (puh.start_time) < DATE_TRUNC('day', CURRENT_DATE())
+                                    GROUP BY 1),
+                     avg_around AS (SELECT AVG(credits_used) AS avg_cr, COUNT(1) AS count_d
+                                    FROM sum_around a
+                                    WHERE a.start_time < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))),
+                     sr_qr AS (SELECT SUM(POWER(a.credits_used - b.avg_cr, 2))                           AS sr,
+                                      COUNT(1)                                                           AS count_day,
+                                      CASE WHEN count_day < 3 THEN 0 ELSE SQRT(sr / (count_day - 1)) END AS sr_qr_c
+                               FROM sum_around a
+                                        JOIN avg_around b
+                               WHERE a.start_time < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE())))))
+                SELECT COUNT(*) AS res_test
+                FROM (SELECT a.credits_used, b.avg_cr, c.sr_qr_c, c.count_day
+                      FROM sum_around a
+                               JOIN avg_around b
+                               JOIN sr_qr c
+                      WHERE start_time >= ((DATEADD('day'
+                          , -1
+                          , DATE_TRUNC('day'
+                                                        , CURRENT_DATE()))))
+                        AND count_day >= 3
+                        AND a.credits_used - (avg_cr + (sr_qr_c * 2)) > 1) "
     outliers_snowpipe_week = 0:
       schedule: "0 5 * * MON"
       name: "Outliers in total credit from snowpipe by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>"
