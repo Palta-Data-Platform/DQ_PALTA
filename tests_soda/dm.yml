@@ -32,19 +32,19 @@ zing_data.dm_dashboard.f_revenue_and_subscription:
     interval: '2d'
 zing_data.dm_dashboard.f_conversion_mobile:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
     interval: '1month'
 zing_data.dm_dashboard.f_retention_rate:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'REPORT_DT'
     interval: '1month'
 zing_data.dm_dashboard.f_product_ltv:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'date'
     interval: '1 month'
@@ -56,7 +56,7 @@ zing_data.dm_dashboard.f_conversion_web:
     interval: '1month'
 zing_data.dm_dashboard.f_conversion_from_open_to_subscription:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
     interval: '1month'
@@ -68,25 +68,25 @@ palta_data.dm_dashboard.f_revenue_and_subscription:
     interval: '2 month'
 palta_data.dm_dashboard.f_conversion_mobile:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
     interval: '2month'
 palta_data.dm_dashboard.f_product_ltv:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'date'
     interval: '2 month'
 palta_data.dm_dashboard.f_conversion_from_open_to_subscription:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'OPEN_DATE'
     interval: '2month'
 palta_data.dm_dashboard.f_retention_rate:
   channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
+  schedule: "0 10 * * *"
   freshness_date > 0:
     time_column: 'REPORT_DT'
     interval: '1month'
