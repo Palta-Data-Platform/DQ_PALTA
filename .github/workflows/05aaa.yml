@@ -35,7 +35,6 @@ jobs:
         - simple_data.dm_finance.stripe__invoice_line_items
         - simple_data.dm_finance.stripe__weekly_overview
         - simple_data.dm_finance.d_product
-        - zing_data.dm_finance.f_subscription
         - SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
         - SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE
         - SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY
