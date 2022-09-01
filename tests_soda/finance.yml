@@ -84,7 +84,7 @@ simple_data.dm_finance.f_transaction:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
 simple_data.dm_finance.f_subscription:
-  schedule: '0 5 * * *'
+  schedule: '0 10 * * *'
   custom_selects:
     All_amounts = 0:
       name: "All amounts in original currency have been converted to USD. transactions were not converted to USD last 7 days"
