@@ -6,43 +6,43 @@ SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY:
     outliers_credits_systems_day = 0:
       name: "Outliers in credits on systems for Warehouses by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
       ```
-      WITH sum_around AS (SELECT CASE
-                               WHEN SPLIT(wmh.warehouse_name, '_')[1] IN
-                                    ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'APP', 'AMPLITUDE', 'ATLAN')
-                                   THEN SPLIT(wmh.warehouse_name, '_')[1]
-                               ELSE wmh.warehouse_name END                            AS system_name
-                         , (TO_CHAR(DATE_TRUNC('day', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
-                         , SUM(wmh.credits_used)                                      AS credits_used_gr
-                    FROM snowflake.account_usage.warehouse_metering_history wmh
-                    WHERE SPLIT(warehouse_name, '_')[1] IN
-                          ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'ATLAN', 'APP', 'AMPLITUDE', 'SERVICES')
-                      AND (wmh.start_time) >=
-                          ((DATEADD('day', -9, DATE_TRUNC('day', CURRENT_DATE()))))
-                      AND (wmh.start_time) < DATE_TRUNC('day', CURRENT_DATE())
-                    GROUP BY 1, 2),
-     avg_around AS (SELECT system_name, AVG(credits_used_gr) AS avg_cr, COUNT(1) AS count_d
-                    FROM sum_around a
-                    WHERE a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))
-
-                    GROUP BY 1),
-     sr_qr AS (SELECT a.system_name,
-                      SUM(POWER(a.credits_used_gr - b.avg_cr, 2)) AS sr,
-                      COUNT(1)                                    AS count_day,
-                      SQRT(sr / (count_day - 1))                  AS sr_qr_c
-               FROM sum_around a
-                        JOIN avg_around b ON a.system_name = b.system_name
-               WHERE a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE()))))
-               GROUP BY a.system_name)
-SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
-      FROM sum_around a
-               JOIN avg_around b ON a.system_name = b.system_name
-               JOIN sr_qr c ON a.system_name = c.system_name
-      WHERE date_cred >= ((DATEADD('day'
-          , -1
-          , DATE_TRUNC('day'
-                                       , CURRENT_DATE()))))
-        AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1
+      WITH sum_around AS (SELECT CASE  \n
+                               WHEN SPLIT(wmh.warehouse_name, '_')[1] IN \n
+                                    ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'APP', 'AMPLITUDE', 'ATLAN') \n
+                                   THEN SPLIT(wmh.warehouse_name, '_')[1] \n
+                               ELSE wmh.warehouse_name END                            AS system_name \n
+                         , (TO_CHAR(DATE_TRUNC('day', wmh.start_time), 'YYYY-MM-dd')) AS date_cred \n
+                         , SUM(wmh.credits_used)                                      AS credits_used_gr \n
+                    FROM snowflake.account_usage.warehouse_metering_history wmh \n
+                    WHERE SPLIT(warehouse_name, '_')[1] IN \n
+                          ('FIVETRAN', 'AIRFLOW', 'DQ', 'LOOKER', 'LOADER', 'ATLAN', 'APP', 'AMPLITUDE', 'SERVICES') \n
+                      AND (wmh.start_time) >= \n
+                          ((DATEADD('day', -9, DATE_TRUNC('day', CURRENT_DATE())))) \n
+                      AND (wmh.start_time) < DATE_TRUNC('day', CURRENT_DATE()) \n
+                    GROUP BY 1, 2), \n
+     avg_around AS (SELECT system_name, AVG(credits_used_gr) AS avg_cr, COUNT(1) AS count_d \n
+                    FROM sum_around a \n
+                    WHERE a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE())))) \n
+ \n
+                    GROUP BY 1), \n
+     sr_qr AS (SELECT a.system_name, \n
+                      SUM(POWER(a.credits_used_gr - b.avg_cr, 2)) AS sr, \n
+                      COUNT(1)                                    AS count_day, \n
+                      SQRT(sr / (count_day - 1))                  AS sr_qr_c \n
+               FROM sum_around a \n
+                        JOIN avg_around b ON a.system_name = b.system_name \n
+               WHERE a.date_cred < ((DATEADD('day', -1, DATE_TRUNC('day', CURRENT_DATE())))) \n
+               GROUP BY a.system_name) \n
+SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day \n
+      FROM sum_around a \n
+               JOIN avg_around b ON a.system_name = b.system_name \n
+               JOIN sr_qr c ON a.system_name = c.system_name \n
+      WHERE date_cred >= ((DATEADD('day' \n
+          , -1 \n
+          , DATE_TRUNC('day' \n
+                                       , CURRENT_DATE())))) \n
+        AND count_day >= 7 \n
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1 \n
          ```      
       "
       outliers_credits_systems_day query: "
