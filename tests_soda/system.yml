@@ -1,6 +1,5 @@
 SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY:
   channel_slack: 'TEST_CHANNEL'
-  always_send: 'True'
   schedule: '0 5 * * *'
   custom_selects:
     outliers_credits_systems_day = 0:
