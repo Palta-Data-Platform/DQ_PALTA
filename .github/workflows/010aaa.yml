@@ -24,10 +24,6 @@ jobs:
         - zing_data.dm_dashboard.f_retention_rate
         - zing_data.dm_dashboard.f_product_ltv
         - zing_data.dm_dashboard.f_conversion_from_open_to_subscription
-        - palta_data.dm_dashboard.f_conversion_mobile
-        - palta_data.dm_dashboard.f_product_ltv
-        - palta_data.dm_dashboard.f_conversion_from_open_to_subscription
-        - palta_data.dm_dashboard.f_retention_rate
         - simple_data.dm_dashboard.f_product_ltv
     steps:
     - name: Install SSH Key
