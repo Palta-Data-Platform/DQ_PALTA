@@ -33,7 +33,6 @@ jobs:
         - SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY
         - simple_data.dm_dashboard.f_revenue_and_subscription
         - zing_data.dm_dashboard.f_revenue_and_subscription
-        - zing_data.dm_dashboard.f_conversion_web
         - palta_data.dm_dashboard.f_revenue_and_subscription
         - zing_data.dm_dashboard.f_user_activity
         - simple_data.dm_dashboard.f_user_activity
