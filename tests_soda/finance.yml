@@ -50,7 +50,7 @@ zing_data.dm_finance.f_transaction:
     interval: '24h'
 simple_data.wrk_stg_finance.f_revenuecat_subscription:
   schedule: "0 */8 * * *"
-  Errors_in_loading_history = 0:
+  Errors_in_loading_history > 110:
     interval: '24h'
   freshness_date > 0:
     time_column: 'T_SF_LOAD_TS'
