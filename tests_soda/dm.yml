@@ -48,12 +48,12 @@ zing_data.dm_dashboard.f_product_ltv:
   freshness_date > 0:
     time_column: 'date'
     interval: '1 month'
-zing_data.dm_dashboard.f_conversion_web:
-  channel_slack: 'TEST_CHANNEL'
-  schedule: "0 5 * * *"
-  freshness_date > 0:
-    time_column: 'ONBOARD_DATE'
-    interval: '1month'
+#zing_data.dm_dashboard.f_conversion_web:
+#  channel_slack: 'TEST_CHANNEL'
+#  schedule: "0 5 * * *"
+#  freshness_date > 0:
+#    time_column: 'ONBOARD_DATE'
+#    interval: '1month'
 zing_data.dm_dashboard.f_conversion_from_open_to_subscription:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 10 * * *"
