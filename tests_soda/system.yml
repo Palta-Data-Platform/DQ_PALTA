@@ -42,7 +42,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1 and a.system_name !='CLOUD_SERVICES_ONLY') 
 "
     outliers_credits_systems_week = 0:
       schedule: "0 5 * * MON"
@@ -417,7 +417,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 3)
                     "
     outliers_credits_user_name_warehouse_week = 0:
       schedule: "0 5 * * MON"
