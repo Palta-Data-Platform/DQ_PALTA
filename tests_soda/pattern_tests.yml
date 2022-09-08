@@ -10,6 +10,10 @@ Errors_in_loading_history = 0:
   name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 0"
   Errors_in_loading_history query: |
       select case when sum(ERROR_COUNT) >0 then sum(ERROR_COUNT) else 0 end as check_test from table ({db}.information_schema.copy_history(table_name => '{path_to_table}', start_time =>current_timestamp - INTERVAL '{interval}'))
+Errors_in_loading_history > 110:
+  name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 110"
+  Errors_in_loading_history query: |
+      select case when sum(ERROR_COUNT) >0 then sum(ERROR_COUNT) else 0 end as check_test from table ({db}.information_schema.copy_history(table_name => '{path_to_table}', start_time =>current_timestamp - INTERVAL '{interval}'))
 Checking_for_missing_days_for_days = 0:
     name: " There are missed days.{num_days}"
     Checking_for_missing_days_for_days query: |
