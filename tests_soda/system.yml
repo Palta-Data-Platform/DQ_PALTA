@@ -288,7 +288,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 2
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4
       ```
       "
       outliers_credits_name_day query: "
@@ -325,7 +325,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 2)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
             "
     outliers_credits_name_week = 0:
       schedule: "0 5 * * MON"
@@ -518,7 +518,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4
       ```
       
       "
@@ -561,7 +561,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
                 "
     outliers_credits_user_company_week = 0:
       schedule: "0 5 * * MON"
@@ -772,7 +772,6 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                                        , CURRENT_DATE()))))
         AND count_day >= 7
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 5
-      
       ```
       "
       outliers_credits_user_name_warehouse_day query: "
@@ -809,7 +808,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 3)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 5)
                     "
     outliers_credits_user_name_warehouse_week = 0:
       schedule: "0 5 * * MON"
