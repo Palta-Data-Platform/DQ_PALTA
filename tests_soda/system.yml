@@ -3,7 +3,7 @@ SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY:
   schedule: '0 5 * * *'
   custom_selects:
     outliers_credits_systems_day = 0:
-      name: "Outliers in credits on systems for Warehouses by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on systems for Warehouses by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[1] IN
@@ -86,7 +86,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
 "
     outliers_credits_systems_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in credits on systems for Warehouses by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on systems for Warehouses by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[1] IN
@@ -171,7 +171,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
     "
     outliers_credits_systems_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in credits on systems for Warehouses by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on systems for Warehouses by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[1] IN
@@ -254,7 +254,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
         "
     outliers_credits_name_day = 0:
       schedule: "0 5 * * *"
-      name: "Outliers in credits on warehouse name for Warehouses by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on warehouse name for Warehouses by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
        ```
        WITH sum_around AS (SELECT wmh.warehouse_name                                         AS system_name
                          , (TO_CHAR(DATE_TRUNC('day', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -329,7 +329,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
             "
     outliers_credits_name_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in credits on warehouse name for Warehouses by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on warehouse name for Warehouses by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
        ```
        WITH sum_around AS (SELECT wmh.warehouse_name                                         AS system_name
                          , (TO_CHAR(DATE_TRUNC('week', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -404,7 +404,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                 "
     outliers_credits_name_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in credits on warehouse name for Warehouses by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on warehouse name for Warehouses by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT wmh.warehouse_name                                           AS system_name
                          , (TO_CHAR(DATE_TRUNC('month', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -479,7 +479,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                     "
     outliers_credits_user_company_day = 0:
       schedule: "0 5 * * *"
-      name: "Outliers in credits on users activity for Warehouses by company by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by company by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
        WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[0] IN
@@ -565,7 +565,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                 "
     outliers_credits_user_company_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in credits on users activity for Warehouses by company by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by company by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[0] IN
@@ -650,7 +650,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                     "
     outliers_credits_user_company_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in credits on users activity for Warehouses by company by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by company by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
         ```
          WITH sum_around AS (SELECT CASE
                                WHEN SPLIT(wmh.warehouse_name, '_')[0] IN
@@ -737,7 +737,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                         "
     outliers_credits_user_name_warehouse_day = 0:
       schedule: "0 5 * * *"
-      name: "Outliers in credits on users activity for Warehouses by name warehouse by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by name warehouse by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
        WITH sum_around AS (SELECT wmh.warehouse_name                                         AS system_name
                          , (TO_CHAR(DATE_TRUNC('day', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -812,7 +812,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                     "
     outliers_credits_user_name_warehouse_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in credits on users activity for Warehouses by name warehouse by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by name warehouse by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT wmh.warehouse_name                                           AS system_name
                          , (TO_CHAR(DATE_TRUNC('week', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -887,7 +887,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                         "
     outliers_credits_user_name_warehouse_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in credits on users activity for Warehouses by name warehouse by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard>
+      name: "Outliers in credits on users activity for Warehouses by name warehouse by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-dAfeNcptX | link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT wmh.warehouse_name                                           AS system_name
                          , (TO_CHAR(DATE_TRUNC('month', wmh.start_time), 'YYYY-MM-dd')) AS date_cred
@@ -967,7 +967,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
   custom_selects:
     outliers_data_size_day = 0:
       schedule: "0 5 * * *"
-      name: "Outliers in Data size (TB) by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in Data size (TB) by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('day', storage_usage.usage_date), 'YYYY-MM-dd')) AS date_cred,
                                     AVG(((storage_usage.storage_bytes / POWER(1024, 4)) +
@@ -1035,7 +1035,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
            AND a.billable_tb > (avg_cr + (sr_qr_c * 2)))"
     outliers_data_size_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in Data size (TB) by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in Data size (TB) by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('week', storage_usage.usage_date), 'YYYY-MM-dd')) AS date_cred,
                                              AVG(((storage_usage.storage_bytes / POWER(1024, 4)) +
@@ -1103,7 +1103,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
                     AND a.billable_tb > (avg_cr + (sr_qr_c * 3)))"
     outliers_data_size_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in Data size (TB) by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in Data size (TB) by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('month', storage_usage.usage_date), 'YYYY-MM-dd')) AS date_cred,
                                                       AVG(((storage_usage.storage_bytes / POWER(1024, 4)) +
@@ -1175,7 +1175,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
   custom_selects:
     outliers_snowpipe_day = 0:
       schedule: "0 5 * * *"
-      name: "Outliers in total credit from snowpipe by day. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in total credit from snowpipe by day. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
        WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('day', puh.start_time), 'YYYY-MM-dd')) AS start_time
                                          , SUM(puh.credits_used)                                      AS credits_used
@@ -1238,7 +1238,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
                         AND a.credits_used - (avg_cr + (sr_qr_c * 2)) > 1) "
     outliers_snowpipe_week = 0:
       schedule: "0 5 * * MON"
-      name: "Outliers in total credit from snowpipe by week. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in total credit from snowpipe by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('week', puh.start_time), 'YYYY-MM-dd')) AS start_time
                                   , SUM(puh.credits_used)                                      AS credits_used
@@ -1303,7 +1303,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
          "
     outliers_snowpipe_month = 0:
       schedule: "0 5 1 * *"
-      name: "Outliers in total credit from snowpipe by month. The search query can be found in the log. \n <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard>
+      name: "Outliers in total credit from snowpipe by month. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
       ```
       WITH sum_around AS (SELECT (TO_CHAR(DATE_TRUNC('month', puh.start_time), 'YYYY-MM-dd')) AS start_time
                                          , SUM(puh.credits_used)                                      AS credits_used
