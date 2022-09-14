@@ -121,7 +121,6 @@ simple_data.stg_telemetry.f_user_property_backend:
     interval: '72h'
     unique_colums: 'ID'
 zing_data.stg_telemetry.f_amplitude_event:
-  channel_slack: 'TEST_CHANNEL'
   schedule: "0 0 * * *"
   freshness_date > 0:
     time_column: 'T_CHANGE_TS'
