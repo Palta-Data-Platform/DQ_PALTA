@@ -243,7 +243,6 @@ simple_data.dm_finance.d_product:
     interval: '3d'
     unique_colums: "PROVIDER_NAME,PRODUCT_ID,DURATION_INTERVAL"
 zing_data.dm_finance.f_subscription:
-  channel_slack: 'TEST_CHANNEL'
   schedule: '0 10 * * *'
   custom_selects:
     All_amounts = 0:
