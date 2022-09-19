@@ -997,7 +997,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
              , DATE_TRUNC('day'
                                           , CURRENT_DATE()))))
            AND count_day >= 3
-           AND a.billable_tb > (avg_cr + (sr_qr_c * 2))
+           AND a.billable_tb > (avg_cr + (sr_qr_c * 4))
       ```      
       "
       outliers_data_size_day query:
@@ -1031,7 +1031,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
              , DATE_TRUNC('day'
                                           , CURRENT_DATE()))))
            AND count_day >= 3
-           AND a.billable_tb > (avg_cr + (sr_qr_c * 2)))"
+           AND a.billable_tb > (avg_cr + (sr_qr_c * 4)))"
     outliers_data_size_week = 0:
       schedule: "0 5 * * MON"
       name: "Outliers in Data size (TB) by week. The search query can be found in the log. \n> <https://app.snowflake.com/us-east-1/eca33876/snowflake-metrics-d9Di9JjVB| link to dashboard> \n>
