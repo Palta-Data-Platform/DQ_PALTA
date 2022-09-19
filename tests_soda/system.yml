@@ -41,7 +41,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1 and a.system_name !='CLOUD_SERVICES_ONLY'
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10 and a.system_name !='CLOUD_SERVICES_ONLY'
          ```      
       "
       outliers_credits_systems_day query: "
@@ -82,7 +82,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('day'
                                        , CURRENT_DATE()))))
         AND count_day >= 7
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 1 and a.system_name !='CLOUD_SERVICES_ONLY') 
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10 and a.system_name !='CLOUD_SERVICES_ONLY') 
 "
     outliers_credits_systems_week = 0:
       schedule: "0 5 * * MON"
@@ -115,8 +115,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
                         JOIN avg_around b ON a.system_name = b.system_name
                WHERE a.date_cred < ((DATEADD('week', -1, DATE_TRUNC('week', CURRENT_DATE()))))
                GROUP BY a.system_name)
-SELECT COUNT(*) AS res_test
-FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
+SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
       FROM sum_around a
                JOIN avg_around b ON a.system_name = b.system_name
                JOIN sr_qr c ON a.system_name = c.system_name
@@ -125,7 +124,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('week'
                                        , CURRENT_DATE()))))
         AND count_day >= 3
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10
       
       ```
       "
@@ -167,7 +166,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('week'
                                        , CURRENT_DATE()))))
         AND count_day >= 3
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10)
     "
     outliers_credits_systems_month = 0:
       schedule: "0 5 1 * *"
@@ -250,7 +249,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
         AND count_day >= 6
-        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
+        AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10)
         "
     outliers_credits_name_day = 0:
       schedule: "0 5 * * *"
@@ -1133,7 +1132,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
                                , -1
                                , DATE_TRUNC('month'
                                                             , CURRENT_DATE()))))
-                             AND count_day >= 3
+                             AND count_day >= 6
                              AND a.billable_tb > (avg_cr + (sr_qr_c * 3))
       ```
       "
@@ -1167,7 +1166,7 @@ SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
                                , -1
                                , DATE_TRUNC('month'
                                                             , CURRENT_DATE()))))
-                             AND count_day >= 3
+                             AND count_day >= 6
                              AND a.billable_tb > (avg_cr + (sr_qr_c * 3)))"
 SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
   channel_slack: 'TEST_CHANNEL'
@@ -1330,7 +1329,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
                           , -1
                           , DATE_TRUNC('month'
                                                         , CURRENT_DATE()))))
-                        AND count_day >= 3
+                        AND count_day >= 6
                         AND a.credits_used > (avg_cr + (sr_qr_c * 2))
       ```      
       "
@@ -1362,7 +1361,7 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
                           , -1
                           , DATE_TRUNC('month'
                                                         , CURRENT_DATE()))))
-                        AND count_day >= 3
+                        AND count_day >= 6
                         AND a.credits_used > (avg_cr + (sr_qr_c * 2)))"
 
 
