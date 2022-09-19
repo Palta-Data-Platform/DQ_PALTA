@@ -208,7 +208,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10
       ```
       "
@@ -249,7 +249,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 4)
         "
     outliers_credits_name_day = 0:
@@ -437,7 +437,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10     
       ```
       "
@@ -474,7 +474,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10)
                     "
     outliers_credits_user_company_day = 0:
@@ -689,7 +689,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10
         ```
       "
@@ -732,7 +732,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >= 3
+        AND count_day >= 6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10)
                         "
     outliers_credits_user_name_warehouse_day = 0:
@@ -920,7 +920,7 @@ SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >=3
+        AND count_day >=6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10
       ```
       
@@ -958,7 +958,7 @@ FROM (SELECT a.system_name, a.credits_used_gr, b.avg_cr, c.sr_qr_c, c.count_day
           , -1
           , DATE_TRUNC('month'
                                        , CURRENT_DATE()))))
-        AND count_day >=3
+        AND count_day >=6
         AND a.credits_used_gr - (avg_cr + (sr_qr_c * 2)) > 10)
                         "
 SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE:
