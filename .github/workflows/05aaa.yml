@@ -14,16 +14,6 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.dm_marketing.f_ad_spend
-        - zing_data.dm_marketing.f_ad_spend
-        - zing_data.stg_telemetry.f_user_event
-        - simple_data.stg_telemetry.f_user_event
-        - zing_data.dm_dashboard.f_user_activity
-        - simple_data.dm_dashboard.f_user_activity
-        - palta_data.dm_dashboard.f_user_activity
-        - simple_data.dm_dashboard.f_revenue_and_subscription
-        - zing_data.dm_dashboard.f_revenue_and_subscription
-        - palta_data.dm_dashboard.f_revenue_and_subscription
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_source_refund
         - simple_data.stg_finance.f_revenuecat_subscription
@@ -41,6 +31,16 @@ jobs:
         - SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY
         - SNOWFLAKE.ACCOUNT_USAGE.STORAGE_USAGE
         - SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY
+        - simple_data.dm_dashboard.f_revenue_and_subscription
+        - zing_data.dm_dashboard.f_revenue_and_subscription
+        - palta_data.dm_dashboard.f_revenue_and_subscription
+        - zing_data.dm_dashboard.f_user_activity
+        - simple_data.dm_dashboard.f_user_activity
+        - palta_data.dm_dashboard.f_user_activity
+        - zing_data.stg_telemetry.f_user_event
+        - simple_data.stg_telemetry.f_user_event
+        - simple_data.dm_marketing.f_ad_spend
+        - zing_data.dm_marketing.f_ad_spend
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
