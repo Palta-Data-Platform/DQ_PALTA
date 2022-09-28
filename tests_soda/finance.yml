@@ -83,6 +83,10 @@ simple_data.dm_finance.f_transaction:
   freshness_date > 0:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
+  dublicate = 0:
+    time_column: 'TRANSACTION_TS'
+    interval: '3d'
+    unique_colums: "TRANSACTION_ID,TRANSACTION_TYPE"
 simple_data.dm_finance.f_subscription:
   schedule: '0 10 * * *'
   custom_selects:
