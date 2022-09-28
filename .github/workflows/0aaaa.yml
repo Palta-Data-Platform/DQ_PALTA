@@ -19,6 +19,7 @@ jobs:
         - zing_data.wrk_stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.wrk_stg_finance.f_revenuecat_event
+        - simple_data.stg_finance.f_braintree_event
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
