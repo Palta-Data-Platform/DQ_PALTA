@@ -79,7 +79,7 @@ simple_data.stg_finance.f_revenuecat_subscription:
     interval: '3d'
     unique_colums: "STORE_TRANSACTION_ID,START_TIME"
 simple_data.dm_finance.f_transaction:
-  schedule: "0 5 * * *"
+  schedule: "0 */6 * * *"
   freshness_date > 0:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
@@ -143,7 +143,7 @@ FROM (
 )
 LIMIT 1"
 simple_data.stg_finance.d_stripe_price_archive:
-  schedule: "0 5 * * *"
+  schedule: "0 */6 * * *"
   freshness_date > 0:
     time_column: 't_change_ts'
     interval: '26h'
@@ -301,6 +301,10 @@ FROM (
   ORDER BY 1 DESC
 )
 LIMIT 1"
-
+simple_data.stg_finance.f_braintree_event:
+  schedule: "0 * * * *"
+  freshness_date > 0:
+    time_column: 'EVENT_TS'
+    interval: '1h'
 
 
