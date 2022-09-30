@@ -14,8 +14,6 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.dm_finance.f_subscription
-        - zing_data.dm_finance.f_subscription
         - simple_data.dm_dashboard.f_product_ltv
         - simple_data.dm_dashboard.f_conversion_mobile
         - simple_data.dm_dashboard.f_retention_rate
@@ -25,6 +23,8 @@ jobs:
         - zing_data.dm_dashboard.f_retention_rate
         - zing_data.dm_dashboard.f_product_ltv
         - zing_data.dm_dashboard.f_conversion_from_open_to_subscription
+        - simple_data.dm_finance.f_subscription
+        - zing_data.dm_finance.f_subscription
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
