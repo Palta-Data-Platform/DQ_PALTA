@@ -79,7 +79,7 @@ simple_data.stg_finance.f_revenuecat_subscription:
     interval: '3d'
     unique_colums: "STORE_TRANSACTION_ID,START_TIME"
 simple_data.dm_finance.f_transaction:
-  schedule: "0 */6 * * *"
+  schedule: "30 3,9,15 * * *"
   freshness_date > 0:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
