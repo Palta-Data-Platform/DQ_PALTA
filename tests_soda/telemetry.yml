@@ -73,7 +73,7 @@ simple_data.stg_telemetry.f_user_event:
     unique_colums: 'UUID'
   custom_selects:
     No_Web = 0:
-      name: "There is no Web in event for the last hour.Event Analytics is partially unavailable"
+      name: "There is no Web in event for the last hour. Event Analytics is partially unavailable"
       No_Web query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.stg_telemetry.f_user_event where SERVER_UPLOAD_TIME>current_timestamp -INTERVAL '1h' and PLATFORM='Web'  LIMIT 50\n"
     No_Android = 0:
       name: "There is no Android in event for the last hour.Event Analytics is partially unavailable"
