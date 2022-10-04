@@ -1,17 +1,17 @@
 freshness_date > 0:
-      name: "Freshness_date. The data has not been updated for the last {interval}. Please take this into account when using the data."
+      name: "Data Presence. The data has not been updated for the last {interval}. Please take this into account when using the data."
       freshness_date query: |
         select count(1)  from {path_to_table} where {time_column} >= current_timestamp - INTERVAL '{interval}'
 dublicate = 0:
-  name: "Dublicate. There are duplicates in the data for the last {interval} . Please take this into account when using the data"
+  name: "Duplicates. There are duplicates in the data for the last {interval} . Please take this into account when using the data"
   dublicate query: |
     select count(1) from(select {unique_colums} ,count(1) as dupes from {path_to_table}  where {time_column}>= current_timestamp -INTERVAL '{interval}'  group by {unique_colums} having dupes >1)
 Errors_in_loading_history = 0:
-  name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 0"
+  name: "Errors in loading history with snowpipe. The number of error lines exceeded the threshold of 0"
   Errors_in_loading_history query: |
       select case when sum(ERROR_COUNT) >0 then sum(ERROR_COUNT) else 0 end as check_test from table ({db}.information_schema.copy_history(table_name => '{path_to_table}', start_time =>current_timestamp - INTERVAL '{interval}'))
 Errors_in_loading_history < 111:
-  name: "Errors_in_loading_history. The number of error lines exceeded the threshold of 111"
+  name: "Errors in loading history with snowpipe. The number of error lines exceeded the threshold of 111"
   Errors_in_loading_history query: |
       select case when sum(ERROR_COUNT) >0 then sum(ERROR_COUNT) else 0 end as check_test from table ({db}.information_schema.copy_history(table_name => '{path_to_table}', start_time =>current_timestamp - INTERVAL '{interval}'))
 Checking_for_missing_days_for_days = 0:

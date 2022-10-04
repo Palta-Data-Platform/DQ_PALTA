@@ -57,7 +57,7 @@ simple_data.wrk_stg_finance.f_revenuecat_subscription:
     interval: '26h'
   custom_selects:
     app_store = 0:
-      name: "There is no app_store in subscriptions for the last 26 hours.Payment Analytics is partially unavailable"
+      name: "No subscription from Apple in the last 26h. Payment Analytics is partially unavailable"
       app_store query: "SELECT case when count(1)>0 then 0 else 1 end as res from simple_data.wrk_stg_finance.f_revenuecat_subscription where T_SF_LOAD_TS>current_timestamp -INTERVAL '26h' and STORE='app_store' LIMIT 50"
 simple_data.wrk_stg_finance.f_revenuecat_event:
   schedule: "0 * * * *"
