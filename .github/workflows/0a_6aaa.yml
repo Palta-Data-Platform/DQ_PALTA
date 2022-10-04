@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.dm_finance.f_transaction
         - simple_data.stg_finance.d_stripe_price_archive
     steps:
     - name: Install SSH Key
