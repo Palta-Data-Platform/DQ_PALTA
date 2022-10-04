@@ -37,7 +37,7 @@ zing_data.stg_finance.f_revenuecat_event:
     time_column: 'EVENT_TIMESTAMP'
     interval: '180m'
 zing_data.dm_finance.f_transaction:
-  schedule: "0 */8 * * *"
+  schedule: "30 3,9,15 * * *"
   Errors_in_loading_history = 0:
     interval: '3h'
   dublicate = 0:
@@ -49,7 +49,7 @@ zing_data.dm_finance.f_transaction:
     time_column: 'TRANSACTION_TS'
     interval: '24h'
 simple_data.wrk_stg_finance.f_revenuecat_subscription:
-  schedule: "0 */8 * * *"
+  schedule: "30 3,9,15 * * *"
   Errors_in_loading_history < 111:
     interval: '24h'
   freshness_date > 0:
