@@ -1,0 +1,60 @@
+palta_fivetran.google_driver_flo.flo_user_activity:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'REPORT_DATE'
+    interval: '1000d'
+    unique_colums: 'app, period, report_date, platform, country'
+
+palta_fivetran.google_driver_flo.flo_conversion:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'open_date'
+    interval: '1000d'
+    unique_colums: 'app, open_date, country, platform, acquisition_platform'
+palta_fivetran.google_driver_flo.flo_product_ltv:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'REPORT_DATE'
+    interval: '1000d'
+    unique_colums: 'app, report_date, country, platform'
+
+palta_fivetran.google_driver_flo.flo_revenue_and_subs:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'REPORT_DATE'
+    interval: '1000d'
+    unique_colums: 'app, period, report_date, platform, country, product_duration'
+palta_fivetran.google_driver_flo.flo_conversion_from_open_to_sub:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'open_date'
+    interval: '1000d'
+    unique_colums: 'app, open_date, country, platform, acquisition_platform'
+
+palta_fivetran.google_driver_flo.flo_activity_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, retention_period'
+
+palta_fivetran.google_driver_flo.flo_subs_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, subscription_duration, retention_period'
+palta_fivetran.google_driver_flo.flo_revenue_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, retention_period'
