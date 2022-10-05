@@ -20,14 +20,14 @@ jobs:
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.wrk_stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_braintree_event
-        - palta_fivetran.google_driver_flo.flo_user_activity
-        - palta_fivetran.google_driver_flo.flo_conversion
-        - palta_fivetran.google_driver_flo.flo_product_ltv
-        - palta_fivetran.google_driver_flo.flo_revenue_and_subs
-        - palta_fivetran.google_driver_flo.flo_conversion_from_open_to_sub
-        - palta_fivetran.google_driver_flo.flo_activity_retention
-        - palta_fivetran.google_driver_flo.flo_subs_retention
-        - palta_fivetran.google_driver_flo.flo_revenue_retention
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_user_activity
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_conversion
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_product_ltv
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_revenue_and_subs
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_conversion_from_open_to_sub
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_activity_retention
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_subs_retention
+        - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_revenue_retention
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
