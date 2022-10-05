@@ -32,7 +32,7 @@ PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.FLO_CONVERSION_FROM_OPEN_TO_SUBSCRIPTION:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 * * * *"
   dublicate = 0:
-    time_column: 'open_date'
+    time_column: 'FIRST_OPEN_DATE'
     interval: '1000d'
     unique_colums: 'app, FIRST_OPEN_DATE, country, platform, acquisition_platform'
 
@@ -58,3 +58,66 @@ PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_revenue_retention:
     time_column: 'report_date'
     interval: '1000d'
     unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, retention_period'
+
+
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_user_activity:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'REPORT_DATE'
+    interval: '1000d'
+    unique_colums: 'app, period, report_date, platform, country'
+
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_conversion:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'open_date'
+    interval: '1000d'
+    unique_colums: 'app, open_date, country, platform, acquisition_platform'
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_PRODUCT_LTV:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'REPORT_DATE'
+    interval: '1000d'
+    unique_colums: 'app, REPORT_DATE,COUNTRY,  platform'
+
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_revenue_and_subs:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_dt'
+    interval: '1000d'
+    unique_colums: 'app, period, REPORT_DATE, platform, country, product_duration'
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_conversion_from_open_to_sub:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'OPEN_DATE'
+    interval: '1000d'
+    unique_colums: 'app, OPEN_DATE, country, platform, acquisition_platform'
+
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_activity_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, COHORT_DATE, report_date, country, platform, acquisition_platform, retention_period'
+
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_subs_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, subscription_duration, retention_period'
+PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_revenue_retention:
+  channel_slack: 'TEST_CHANNEL'
+  schedule: "0 * * * *"
+  dublicate = 0:
+    time_column: 'report_date'
+    interval: '1000d'
+    unique_colums: 'app, cohort_date, report_date, country, platform, acquisition_platform, retention_period'
+
