@@ -87,7 +87,7 @@ PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_revenue_and_subs:
   channel_slack: 'TEST_CHANNEL'
   schedule: "0 * * * *"
   dublicate = 0:
-    time_column: 'report_dt'
+    time_column: 'REPORT_DATE'
     interval: '1000d'
     unique_colums: 'app, period, REPORT_DATE, platform, country, product_duration'
 PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_conversion_from_open_to_sub:
