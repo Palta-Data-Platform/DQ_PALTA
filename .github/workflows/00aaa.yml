@@ -30,7 +30,7 @@ jobs:
         key: ${{ secrets.DQ_INSTAL }}
         known_hosts: just-a-placeholder-so-we-dont-get-errors
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
