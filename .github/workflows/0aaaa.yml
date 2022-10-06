@@ -37,12 +37,12 @@ jobs:
         - PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_subs_retention
         - PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_revenue_retention
     steps:
-    - uses: actions/checkout@v3
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.DQ_INSTAL }}
         known_hosts: just-a-placeholder-so-we-dont-get-errors
+    - uses: actions/checkout@v3
     - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
