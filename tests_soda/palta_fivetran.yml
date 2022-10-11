@@ -83,7 +83,7 @@ PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_conversion_from_open_to_sub:
   dublicate = 0:
     time_column: 'OPEN_DATE'
     interval: '1000d'
-    unique_colums: 'app, OPEN_DATE, country, platform, acquisition_platform'
+    unique_colums: 'app, OPEN_DATE, country, platform, acquisition_platform,subs_cohort'
 
 PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_activity_retention:
   schedule: "0 * * * *"
