@@ -14,6 +14,12 @@ jobs:
     strategy:
       matrix:
         table_path:
+        - zing_data.stg_telemetry.f_user_event
+        - simple_data.stg_telemetry.f_user_event
+        - zing_data.wrk_stg_finance.f_revenuecat_event
+        - simple_data.stg_finance.f_revenuecat_event
+        - simple_data.wrk_stg_finance.f_revenuecat_event
+        - simple_data.stg_finance.f_braintree_event
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_user_activity
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_conversion
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.FLO_LTV_PRODUCT
@@ -30,12 +36,6 @@ jobs:
         - PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_activity_retention
         - PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_subs_retention
         - PALTA_FIVETRAN.GOOGLE_DRIVE_PRISMA.PRISMA_revenue_retention
-        - zing_data.stg_telemetry.f_user_event
-        - simple_data.stg_telemetry.f_user_event
-        - zing_data.wrk_stg_finance.f_revenuecat_event
-        - simple_data.stg_finance.f_revenuecat_event
-        - simple_data.wrk_stg_finance.f_revenuecat_event
-        - simple_data.stg_finance.f_braintree_event
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
