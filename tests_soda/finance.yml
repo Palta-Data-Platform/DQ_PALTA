@@ -312,3 +312,26 @@ simple_data.stg_finance.f_braintree_event:
     interval: '1h'
 
 
+# POC F_TRANSACTION TESTS
+simple.finance.f_transaction:
+  schedule: "30 3,9,15 * * *"
+  freshness_date > 0:
+    time_column: 'TRANSACTION_TS'
+    interval: '24h'
+  dublicate = 0:
+    time_column: 'TRANSACTION_TS'
+    interval: '3d'
+    unique_colums: "PROVIDER_NAME,TRANSACTION_ID,TRANSACTION_TYPE"
+  custom_selects:
+    missing_comission = 0:
+      name: "One or more columns related to commission contain NULL value."
+      missing_comission query: "SELECT COUNT(*) FROM simple.finance.f_transaction WHERE commission_pct IS NULL OR commission_local IS NULL OR commission_usd IS NULL"
+    missing_revenue = 0:
+      name: "One or more columns related to revenue contain NULL value."
+      missing_revenue query: "SELECT COUNT(*) FROM simple.finance.f_transaction WHERE revenue_gross_local IS NULL OR revenue_gross_usd IS NULL OR revenue_net_local IS NULL OR revenue_net_usd IS NULL"
+    missing_tax = 0:
+      name: "One or more columns related to tax contain NULL value."
+      missing_tax query: "SELECT COUNT(*) FROM simple.finance.f_transaction WHERE tax_pct IS NULL OR tax_local IS NULL OR tax_usd IS NULL"
+    missing_product_id = 0:
+      name: "One or more columns related to tax contain NULL value."
+      missing_product_id query: "SELECT COUNT(*) FROM simple.finance.f_transaction WHERE provider_name != 'PAYPAL' AND transaction_ts < CURRENT_DATE - INTERVAL '1 day' AND product_id IS NULL"
