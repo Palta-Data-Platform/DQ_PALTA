@@ -14,12 +14,12 @@ jobs:
     strategy:
       matrix:
         table_path:
+        - zing_data.stg_telemetry.f_user_event
+        - simple_data.stg_telemetry.f_user_event
         - zing_data.wrk_stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.wrk_stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_braintree_event
-        - zing_data.stg_telemetry.f_user_event
-        - simple_data.stg_telemetry.f_user_event
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_user_activity
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.flo_conversion
         - PALTA_FIVETRAN.GOOGLE_DRIVE_FLO.FLO_LTV_PRODUCT
