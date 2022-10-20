@@ -14,6 +14,9 @@ jobs:
     strategy:
       matrix:
         table_path:
+        - simple_data.stg_finance.f_revenuecat_event
+        - zing_data.stg_finance.f_revenuecat_subscription
+        - zing_data.stg_finance.f_revenuecat_event
         - zing_data.stg_telemetry.f_user_event
         - zing_data.stg_telemetry.d_user_profile
         - weather_data.stg_telemetry.f_user_event
@@ -22,9 +25,6 @@ jobs:
         - simple_data.stg_telemetry.f_amplitude_event
         - paced_data.stg_telemetry.f_user_event
         - zing_data.stg_telemetry.f_amplitude_event
-        - simple_data.stg_finance.f_revenuecat_event
-        - zing_data.stg_finance.f_revenuecat_subscription
-        - zing_data.stg_finance.f_revenuecat_event
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
