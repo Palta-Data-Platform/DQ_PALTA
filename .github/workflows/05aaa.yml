@@ -30,7 +30,6 @@ jobs:
         - simple_data.dm_finance.stripe__weekly_overview
         - simple_data.dm_finance.d_product
         - zing_data.stg_telemetry.f_user_event
-        - simple_data.stg_telemetry.f_user_event
         - simple_data.dm_marketing.f_ad_spend
         - zing_data.dm_marketing.f_ad_spend
         - zing_data.dm_dashboard.f_user_activity

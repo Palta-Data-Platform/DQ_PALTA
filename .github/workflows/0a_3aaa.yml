@@ -21,7 +21,6 @@ jobs:
         - zing_data.stg_telemetry.d_user_profile
         - weather_data.stg_telemetry.f_user_event
         - simple_data.stg_telemetry.idmap_user
-        - simple_data.stg_telemetry.f_user_event
         - simple_data.stg_telemetry.f_amplitude_event
         - paced_data.stg_telemetry.f_user_event
         - zing_data.stg_telemetry.f_amplitude_event
