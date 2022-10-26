@@ -83,3 +83,28 @@ palta_data.dm_dashboard.f_revenue_and_subscription:
 #  freshness_date > 0:
 #    time_column: 'REPORT_DT'
 #    interval: '1month'
+simple_data.dm_dashboard.f_subscription_and_activity:
+  schedule: "0 5 * * *"
+  freshness_date > 0:
+    time_column: 'REPORT_DT'
+    interval: '1d'
+custom_selects:
+  count_PB_id = 0:
+  name: "Test f_subscription_and_activity count paltabrain_id day over day"
+  count_PB_id query: "SELECT
+    COUNT(DISTINCT
+        CASE
+            WHEN REPORT_DT = current_date() -1
+            THEN PALTABRAIN_ID
+        END
+        ) AS yesterday
+    , COUNT(DISTINCT
+        CASE
+            WHEN REPORT_DT = current_date() -2
+            THEN PALTABRAIN_ID
+        END
+        ) AS yesterday2
+    , yesterday / yesterday2 as delta
+FROM SIMPLE_DATA.DM_DASHBOARD.F_SUBSCRIPTION_AND_ACTIVITY
+WHERE REPORT_DT >= current_date() -2
+HAVING delta < 0.8"
