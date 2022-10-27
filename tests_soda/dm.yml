@@ -87,7 +87,7 @@ simple_data.dm_dashboard.f_subscription_and_activity:
   schedule: "0 5 * * *"
   freshness_date > 0:
     time_column: 'REPORT_DT'
-    interval: '-2d'
+    interval: '2d'
   custom_selects:
     count_PB_id = 0:
       name: "Test f_subscription_and_activity count paltabrain_id day over day"
