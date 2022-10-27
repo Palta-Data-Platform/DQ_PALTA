@@ -17,6 +17,7 @@ jobs:
         - simple_data.dm_dashboard.f_revenue_and_subscription
         - zing_data.dm_dashboard.f_revenue_and_subscription
         - palta_data.dm_dashboard.f_revenue_and_subscription
+        - simple_data.dm_dashboard.f_subscription_and_activity
         - simple_data.stg_finance.f_revenuecat_event
         - simple_data.stg_finance.f_source_refund
         - simple_data.stg_finance.f_revenuecat_subscription
