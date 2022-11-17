@@ -728,5 +728,17 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
                                                         , CURRENT_DATE()))))
                         AND count_day >= 6
                         AND a.credits_used > (avg_cr + (sr_qr_c * 2)))"
-
-
+meta.information_schema.query_history:
+  schedule: "*/30 * * * *"
+  channel_slack: 'TEST_CHANNEL'
+  ALWAYS_SEND: 'True'
+  custom_selects:
+    queries_running > 2:
+      name: "Queries running.There are queries running for more than 20 minutes"
+      queries_running query: "select count(1) from(select a.*,(EXECUTION_TIME+COMPILATION_TIME)/1000/60
+from table(meta.information_schema.query_history()) a where EXECUTION_STATUS in ('RUNNING') and (EXECUTION_TIME+COMPILATION_TIME)/1000/60>=20 
+order by start_time)"
+    queue = 0:
+      name: "Queue. There are queries in the queue for more than 15 minutes"
+      queue query: "select count(1) from ( 
+select WAREHOUSE_NAME,count(1) from table(meta.information_schema.query_history()) where EXECUTION_STATUS='QUEUED' and START_TIME<=current_timestamp -INTERVAL '15m'  group by WAREHOUSE_NAME)"
