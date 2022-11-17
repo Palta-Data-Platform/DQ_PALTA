@@ -731,7 +731,6 @@ SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY:
 meta.information_schema.query_history:
   schedule: "*/30 * * * *"
   channel_slack: 'TEST_CHANNEL'
-  ALWAYS_SEND: 'True'
   custom_selects:
     queries_running < 2:
       name: "Queries running.There are queries running for more than 20 minutes"
