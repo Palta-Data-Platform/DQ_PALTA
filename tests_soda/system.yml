@@ -732,7 +732,7 @@ meta.information_schema.query_history:
   schedule: "*/30 * * * *"
   channel_slack: 'TEST_CHANNEL'
   custom_selects:
-    queries_running < 2:
+    queries_running = 0:
       name: "Queries running.There are queries running for more than 20 minutes"
       queries_running query: "select count(1) from(select a.*,(EXECUTION_TIME+COMPILATION_TIME)/1000/60
 from table(meta.information_schema.query_history()) a where EXECUTION_STATUS in ('RUNNING') and (EXECUTION_TIME+COMPILATION_TIME)/1000/60>=20 
