@@ -734,8 +734,9 @@ meta.information_schema.query_history:
     queries_running = 0:
       name: "Queries running.There are queries running for more than 20 minutes"
       queries_running query: "select count(1) from(select a.*,(EXECUTION_TIME+COMPILATION_TIME)/1000/60
-from table(meta.information_schema.query_history()) a where EXECUTION_STATUS in ('RUNNING') and (EXECUTION_TIME+COMPILATION_TIME)/1000/60>=20 
-order by start_time)"
+from query_history a   where (EXECUTION_TIME+COMPILATION_TIME)/1000/60>=20    and
+START_TIME>=current_timestamp -INTERVAL '1h'and USER_NAME not in ('PALTA_AIRFLOW','SIMPLE_AIRFLOW')
+ limit 10)"
     queue = 0:
       name: "Queue. There are queries in the queue for more than 15 minutes"
       queue query: "select count(1) from ( 
