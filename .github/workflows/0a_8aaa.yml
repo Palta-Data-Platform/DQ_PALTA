@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         table_path:
-        - simple_data.stg_finance.f_revenuecat_subscription
         - simple_data.wrk_stg_telemetry.idmap_user
+        - simple_data.stg_finance.f_revenuecat_subscription
     steps:
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
